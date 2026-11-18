@@ -130,9 +130,41 @@ A HOME será o ponto de entrada da plataforma. Ela deverá organizar matérias e
 
 ### 6.2. ESTUDO PRINCIPAL — Aprendizagem orientada
 
-O estudo principal será o ambiente central de aprendizagem, com conteúdos organizados em etapas, exemplos, exercícios, tentativas, dicas progressivas e feedback, conforme as seções 4 e 7.
+O estudo principal será o ambiente central de aprendizagem. A área central deverá exibir o conteúdo da aula, a etapa atual e o progresso, com exemplos, exercícios, tentativas, dicas progressivas e feedback, conforme as seções 4 e 7.
 
-A IA atuará como tutora, ajudando o estudante a desenvolver o raciocínio. O contexto dessa interação deverá considerar o assunto e a etapa atuais do estudo.
+As interações com IA dentro do estudo principal terão responsabilidades distintas:
+
+| Funcionalidade | Responsabilidade |
+| :--- | :--- |
+| Estudo principal | Exibir o conteúdo e acompanhar as etapas e o progresso. |
+| Tutor IA | Responder dúvidas sem modificar o estudo. |
+| Personalizar estudo com IA | Propor modificações no planejamento e no conteúdo. |
+| Aprovação do estudante | Autorizar ou rejeitar a aplicação das modificações propostas. |
+
+#### Tutor IA — dúvidas sobre o conteúdo
+
+O Tutor IA ficará em um chat lateral dedicado a dúvidas sobre o assunto e a etapa atuais. O estudante poderá pedir outra explicação, exemplos adicionais, esclarecimentos sobre conceitos ou trechos de código e aprofundamento de uma explicação.
+
+O Tutor IA não poderá modificar o conteúdo principal, reorganizar etapas, alterar exercícios, registrar tentativas, concluir atividades ou modificar o progresso do estudo. Seu histórico deverá permanecer distinto do histórico do chat de personalização e das consultas independentes.
+
+#### Personalizar estudo com IA — modificar o estudo principal
+
+A opção **Modificar estudo** ou **Personalizar estudo com IA** abrirá um segundo chat, independente do Tutor IA, dedicado a solicitar alterações no planejamento e no conteúdo do estudo. Esse chat deverá abrir em um painel maior e manter o conteúdo do estudo visível ao fundo sempre que possível.
+
+O estudante poderá solicitar alterações como mudar o assunto principal, adicionar ou remover conteúdos, criar ou reorganizar etapas, aprofundar um assunto, simplificar conteúdo avançado ou ajustar o planejamento às dificuldades identificadas.
+
+A IA não poderá aplicar alterações imediatamente após receber o pedido. O fluxo será:
+
+1. O estudante descreve a alteração desejada.
+2. A IA analisa o pedido e o planejamento atual.
+3. A IA apresenta uma proposta de alteração.
+4. O estudante analisa a proposta.
+5. O estudante aprova ou rejeita a proposta.
+6. A plataforma aplica as alterações somente após a aprovação.
+
+Se a proposta puder afetar etapas concluídas, exercícios ou informações de domínio, a IA deverá explicar o impacto antes da aprovação. A aplicação deverá preservar o histórico de aprendizagem e não apagar indevidamente o progresso já registrado.
+
+O histórico do chat de personalização deverá ser separado do histórico do Tutor IA, das consultas independentes e dos registros de aprendizagem.
 
 ### 6.3. CONSULTAS INDEPENDENTES — Dúvidas sem interromper o estudo
 
@@ -149,7 +181,7 @@ As consultas independentes não poderão:
 - Atualizar automaticamente o nível de domínio dos conceitos.
 - Alterar o progresso registrado da aula.
 
-Elas poderão receber o assunto atual como contexto opcional para melhorar a explicação, sem modificar o estado do estudo. Seu histórico deverá permanecer separado do histórico de aprendizagem, das tentativas e do progresso do estudante.
+Elas poderão receber o assunto atual como contexto opcional para melhorar a explicação, sem modificar o estado do estudo. Seu histórico deverá permanecer separado do histórico de aprendizagem, das tentativas, do progresso do estudante e dos históricos do Tutor IA e do chat de personalização. Essas consultas não deverão ser confundidas com os chats do estudo principal.
 
 ### Evolução da consulta técnica — Glossário interativo
 
@@ -243,6 +275,8 @@ A IA deverá ser capaz de:
 
 As respostas deverão considerar o histórico de aprendizagem, mas sem presumir informações que não estejam registradas ou comprovadas.
 
+No estudo principal, essas responsabilidades serão separadas, conforme a seção 6.2. A análise de respostas e o feedback das atividades pertencem ao fluxo de aprendizagem; o Tutor IA responde dúvidas sem modificar o estudo, e a personalização apresenta alterações como propostas que aguardam a aprovação do estudante.
+
 ## 11. Escopo inicial — MVP
 
 MVP significa *Minimum Viable Product* (produto mínimo viável): uma primeira versão funcional, com as funcionalidades essenciais.
@@ -255,12 +289,15 @@ A prioridade é construir algo utilizável rapidamente e evoluir gradualmente.
 2. Cadastro de aulas e conteúdos.
 3. Estudo por assunto, com conteúdos organizados em etapas.
 4. Exercícios com tentativas, dicas e feedback.
-5. Integração inicial com IA por meio do backend para apoiar o estudo principal.
+5. Integração inicial com IA por meio do backend para apoiar o Tutor IA no estudo principal.
 6. Consultas independentes básicas, técnicas e de perguntas livres, conforme a seção 6.
-7. IA capaz de explicar conceitos, oferecer dicas progressivas e analisar respostas no estudo principal.
-8. Registro local do progresso e memória inicial de conceitos aprendidos para contextualizar o estudo.
+7. IA capaz de explicar conceitos, oferecer dicas progressivas e analisar respostas no fluxo de aprendizagem.
+8. Tutor IA em chat lateral para esclarecer dúvidas sobre o assunto e a etapa atuais, sem modificar o estudo principal.
+9. Registro local do progresso e memória inicial de conceitos aprendidos para contextualizar o estudo.
 
 A IA do MVP será limitada e terá como objetivo validar a experiência de aprendizagem. As consultas independentes não poderão alterar o estado do estudo e deverão manter o próprio histórico, separado dos dados de aprendizagem, tentativas e progresso. A análise de projetos importados e o uso avançado do histórico não fazem parte dessa primeira integração.
+
+O chat lateral do Tutor IA permanece no MVP como interface para as capacidades de explicação e esclarecimento já priorizadas. O chat Personalizar estudo com IA não faz parte do MVP: como poderá alterar o planejamento e o conteúdo, será desenvolvido posteriormente com proposta prévia, aprovação do estudante e proteção do progresso, conforme as seções 6.2 e 15.
 
 ### Funcionalidades para etapas posteriores
 
@@ -269,6 +306,7 @@ A IA do MVP será limitada e terá como objetivo validar a experiência de apren
 - Importação de repositórios públicos do GitHub.
 - Seleção de pastas locais.
 - Glossário interativo evoluído a partir da consulta técnica, com painel independente, exercício de compreensão e perguntas específicas.
+- Personalizar estudo com IA por meio de um chat separado, com propostas de alteração, aprovação do estudante e preservação do progresso.
 - Diagramas e visualizações avançadas.
 - Adaptação mais completa da IA ao histórico de aprendizagem.
 - Avaliação adaptativa mais sofisticada.
@@ -358,6 +396,7 @@ A possibilidade comercial deverá ser considerada na organização do projeto, m
 - [ ] Registrar dificuldades.
 - [ ] Permitir retomar estudos.
 - [ ] Manter o histórico das consultas independentes separado do histórico de aprendizagem, das tentativas e do progresso.
+- [ ] Manter separados os históricos do Tutor IA e do chat de personalização.
 
 ### Etapa 5 — Integração inicial com inteligência artificial
 
@@ -369,6 +408,7 @@ Objetivo: testar a função central da plataforma com uma IA tutora simples, sem
 - [ ] Permitir que a IA explique um conceito em linguagem simples.
 - [ ] Permitir que a IA ofereça dicas progressivas sem entregar imediatamente a solução.
 - [ ] Permitir que a IA analise uma tentativa e dê feedback.
+- [ ] Disponibilizar o Tutor IA em um chat lateral para dúvidas sobre o assunto e a etapa atuais, sem alterar conteúdo, etapas, exercícios, tentativas, conclusão de atividades ou progresso.
 - [ ] Disponibilizar consultas técnicas e perguntas livres independentes do estudo principal.
 - [ ] Garantir que consultas independentes não alterem etapas, tentativas, conclusão de atividades, domínio de conceitos ou progresso.
 - [ ] Permitir o envio opcional do assunto atual como contexto das consultas, sem modificar o estado do estudo.
@@ -389,6 +429,8 @@ Nesta etapa, a IA do estudo principal terá contexto limitado ao assunto, à eta
 - [ ] Importação por GitHub.
 - [ ] Importação de pastas locais.
 - [ ] Evoluir a consulta técnica para um glossário interativo, conforme a seção 6.
+- [ ] Criar o chat Personalizar estudo com IA, separado do Tutor IA, para apresentar propostas de alterações no planejamento e no conteúdo.
+- [ ] Aplicar propostas de personalização somente após aprovação explícita do estudante e explicar previamente impactos sobre etapas concluídas, exercícios e informações de domínio, preservando o histórico de aprendizagem e o progresso.
 - [ ] Visualizações didáticas.
 - [ ] Revisão inteligente.
 - [ ] Adaptação mais avançada da IA ao histórico individual.
