@@ -7,6 +7,115 @@
     <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
-    <script src="/js/app.js"></script>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="Plataforma de Estudos com IA — início">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M7 8.5c0-1.1.9-2 2-2h5.5c3.6 0 6.5 2.9 6.5 6.5v13c0-3.6-2.9-6.5-6.5-6.5H9a2 2 0 0 0-2 2v-13Z" />
+            <path d="M25 8.5c0-1.1-.9-2-2-2h-5.5C13.9 6.5 11 9.4 11 13v13c0-3.6 2.9-6.5 6.5-6.5H23a2 2 0 0 1 2 2v-13Z" />
+            <path d="M16 9v9" />
+          </svg>
+        </span>
+        <span class="brand-name">Plataforma de Estudos <span>com IA</span></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a class="nav-link is-active" href="#inicio">Início</a>
+        <a class="nav-link" href="#materias">Minhas matérias</a>
+        <a class="nav-link" href="#novo-estudo">Novo estudo</a>
+      </nav>
+
+      <div class="header-note">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span>Seu espaço de aprendizagem</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="welcome-section page-shell" id="inicio" aria-labelledby="welcome-title">
+        <div class="welcome-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> APRENDER, UM PASSO DE CADA VEZ</p>
+          <h1 id="welcome-title">Seu próximo passo<br>começa <span>por aqui.</span></h1>
+          <p class="welcome-description">
+            Organize seus estudos, explore novos assuntos e aprenda no seu ritmo — com a IA ao seu lado.
+          </p>
+          <a class="text-link" href="#materias">
+            Explorar minhas matérias
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 10h12m-5-5 5 5-5 5" />
+            </svg>
+          </a>
+        </div>
+
+        <aside class="study-card" id="novo-estudo" aria-labelledby="study-title">
+          <div class="study-card-heading">
+            <span class="study-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3v18M3 12h18" />
+              </svg>
+            </span>
+            <span class="card-kicker">UM NOVO COMEÇO</span>
+          </div>
+          <h2 id="study-title">O que você quer aprender?</h2>
+          <p>Escolha um assunto para começar a estudar.</p>
+          <label class="visually-hidden" for="study-topic">Assunto que deseja estudar</label>
+          <input id="study-topic" name="study-topic" type="text" placeholder="Ex.: fundamentos de JavaScript">
+          <button class="primary-button" type="button">
+            Começar um estudo
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 10h12m-5-5 5 5-5 5" />
+            </svg>
+          </button>
+          <div class="study-card-foot">
+            <span class="sparkle" aria-hidden="true">✦</span>
+            <span>Aprenda no seu próprio ritmo</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="subjects-section page-shell" id="materias" aria-labelledby="subjects-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">SEU ESPAÇO DE APRENDIZADO</p>
+            <h2 id="subjects-title">Minhas matérias</h2>
+          </div>
+          <span class="subject-count">0 matérias</span>
+        </div>
+
+        <div class="subjects-grid">
+          <article class="add-subject-card">
+            <span class="add-subject-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+            </span>
+            <h3>Adicione sua primeira matéria</h3>
+            <p>Crie um espaço para reunir os assuntos que você quer aprender.</p>
+            <button class="secondary-button" type="button">
+              Adicionar matéria
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M10 4v12m-6-6h12" />
+              </svg>
+            </button>
+          </article>
+
+          <aside class="learning-note" aria-label="Dica de estudo">
+            <span class="note-decoration" aria-hidden="true">✳</span>
+            <div class="note-content">
+              <span class="card-kicker">DICA PARA COMEÇAR</span>
+              <h3>Pequenos passos também levam longe.</h3>
+              <p>Escolha um assunto que desperte sua curiosidade e comece por ele.</p>
+            </div>
+            <span class="note-orbit note-orbit-one" aria-hidden="true"></span>
+            <span class="note-orbit note-orbit-two" aria-hidden="true"></span>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer page-shell">
+      <span class="footer-brand">Plataforma de Estudos <span>com IA</span></span>
+      <span>Feita para acompanhar sua jornada de aprendizado.</span>
+    </footer>
   </body>
 </html>
