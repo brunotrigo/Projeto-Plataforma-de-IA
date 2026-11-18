@@ -120,20 +120,40 @@ A plataforma não deverá considerar um conceito dominado apenas porque ele apar
 
 O nível de domínio deverá ser atualizado com base em exercícios, respostas, explicações e demonstrações práticas do estudante.
 
-## 6. Glossário interativo
+## 6. Organização das áreas da plataforma
 
-Termos técnicos e palavras em inglês deverão poder ser consultados sem interromper o estudo principal.
+A experiência de aprendizagem será organizada em três áreas principais, com responsabilidades distintas.
 
-Ao clicar em uma palavra ou conceito, a plataforma deverá abrir um painel independente contendo:
+### 6.1. HOME — Página inicial
 
-- Termo original em inglês.
-- Tradução em português.
-- Significado no contexto estudado.
-- Exemplos de utilização.
-- Pequeno exercício para verificar a compreensão.
-- Espaço para perguntas específicas sobre aquele conceito.
+A HOME será o ponto de entrada da plataforma. Ela deverá organizar matérias e assuntos, permitir iniciar novos estudos e retomar estudos em andamento. Não será a tela principal de interação com a IA.
 
-O painel deverá permitir que o estudante consulte uma explicação sem precisar abandonar a aula ou procurar novamente a informação no histórico.
+### 6.2. ESTUDO PRINCIPAL — Aprendizagem orientada
+
+O estudo principal será o ambiente central de aprendizagem, com conteúdos organizados em etapas, exemplos, exercícios, tentativas, dicas progressivas e feedback, conforme as seções 4 e 7.
+
+A IA atuará como tutora, ajudando o estudante a desenvolver o raciocínio. O contexto dessa interação deverá considerar o assunto e a etapa atuais do estudo.
+
+### 6.3. CONSULTAS INDEPENDENTES — Dúvidas sem interromper o estudo
+
+As consultas independentes terão duas ferramentas:
+
+- **Consulta técnica:** permitir consultar termos técnicos, palavras em inglês, funções, métodos, conceitos e trechos de código. A resposta deverá apresentar tradução quando aplicável, significado, função, contexto e exemplos.
+- **Perguntas livres:** permitir perguntas sobre qualquer assunto que gere dúvida, em uma conversa independente do estudo principal.
+
+As consultas independentes não poderão:
+
+- Alterar a etapa atual do estudo.
+- Modificar respostas ou tentativas de exercícios.
+- Marcar atividades como concluídas.
+- Atualizar automaticamente o nível de domínio dos conceitos.
+- Alterar o progresso registrado da aula.
+
+Elas poderão receber o assunto atual como contexto opcional para melhorar a explicação, sem modificar o estado do estudo. Seu histórico deverá permanecer separado do histórico de aprendizagem, das tentativas e do progresso do estudante.
+
+### Evolução da consulta técnica — Glossário interativo
+
+O glossário interativo será uma evolução futura da consulta técnica, não um requisito da versão básica dessa ferramenta. Essa evolução poderá abrir um painel independente com o termo original, tradução, significado no contexto, exemplos, um pequeno exercício de compreensão e espaço para perguntas específicas sobre o conceito. O painel deverá permitir a consulta sem abandonar a aula ou precisar procurar novamente a informação no histórico.
 
 ## 7. Experiência prática de aprendizagem
 
@@ -231,16 +251,16 @@ A prioridade é construir algo utilizável rapidamente e evoluir gradualmente.
 
 ### Funcionalidades prioritárias
 
-1. Interface para organizar matérias e assuntos.
+1. HOME para organizar matérias e assuntos, iniciar novos estudos e retomar os que estão em andamento.
 2. Cadastro de aulas e conteúdos.
-3. Estudo por assunto.
+3. Estudo por assunto, com conteúdos organizados em etapas.
 4. Exercícios com tentativas, dicas e feedback.
-5. Integração inicial com IA por meio do backend.
-6. IA capaz de explicar conceitos, oferecer dicas progressivas e analisar respostas.
-7. Registro local do progresso.
-8. Memória inicial de conceitos aprendidos, para contextualizar as interações com a IA.
+5. Integração inicial com IA por meio do backend para apoiar o estudo principal.
+6. Consultas independentes básicas, técnicas e de perguntas livres, conforme a seção 6.
+7. IA capaz de explicar conceitos, oferecer dicas progressivas e analisar respostas no estudo principal.
+8. Registro local do progresso e memória inicial de conceitos aprendidos para contextualizar o estudo.
 
-A IA do MVP será limitada e terá como objetivo validar a experiência de aprendizagem. A análise de projetos importados e o uso avançado do histórico não fazem parte dessa primeira integração.
+A IA do MVP será limitada e terá como objetivo validar a experiência de aprendizagem. As consultas independentes não poderão alterar o estado do estudo e deverão manter o próprio histórico, separado dos dados de aprendizagem, tentativas e progresso. A análise de projetos importados e o uso avançado do histórico não fazem parte dessa primeira integração.
 
 ### Funcionalidades para etapas posteriores
 
@@ -248,8 +268,7 @@ A IA do MVP será limitada e terá como objetivo validar a experiência de apren
 - Comparação entre conceitos de projetos e conhecimento prévio.
 - Importação de repositórios públicos do GitHub.
 - Seleção de pastas locais.
-- Glossário interativo completo.
-- Painéis independentes com explicações.
+- Glossário interativo evoluído a partir da consulta técnica, com painel independente, exercício de compreensão e perguntas específicas.
 - Diagramas e visualizações avançadas.
 - Adaptação mais completa da IA ao histórico de aprendizagem.
 - Avaliação adaptativa mais sofisticada.
@@ -321,9 +340,9 @@ A possibilidade comercial deverá ser considerada na organização do projeto, m
 
 ### Etapa 2 — Estrutura inicial
 
-- [ ] Criar a interface principal.
+- [ ] Criar a HOME como ponto de entrada da plataforma.
 - [ ] Organizar matérias e assuntos.
-- [ ] Criar a navegação entre conteúdos.
+- [ ] Criar a navegação entre HOME, estudo principal e consultas independentes.
 
 ### Etapa 3 — Sistema de aprendizagem
 
@@ -338,6 +357,7 @@ A possibilidade comercial deverá ser considerada na organização do projeto, m
 - [ ] Registrar nível de domínio.
 - [ ] Registrar dificuldades.
 - [ ] Permitir retomar estudos.
+- [ ] Manter o histórico das consultas independentes separado do histórico de aprendizagem, das tentativas e do progresso.
 
 ### Etapa 5 — Integração inicial com inteligência artificial
 
@@ -349,9 +369,12 @@ Objetivo: testar a função central da plataforma com uma IA tutora simples, sem
 - [ ] Permitir que a IA explique um conceito em linguagem simples.
 - [ ] Permitir que a IA ofereça dicas progressivas sem entregar imediatamente a solução.
 - [ ] Permitir que a IA analise uma tentativa e dê feedback.
+- [ ] Disponibilizar consultas técnicas e perguntas livres independentes do estudo principal.
+- [ ] Garantir que consultas independentes não alterem etapas, tentativas, conclusão de atividades, domínio de conceitos ou progresso.
+- [ ] Permitir o envio opcional do assunto atual como contexto das consultas, sem modificar o estado do estudo.
 - [ ] Testar a integração e tratar erros ou indisponibilidade da API.
 
-Nesta etapa, a IA terá contexto limitado: assunto atual e informações de aprendizagem que já estiverem disponíveis. A personalização avançada ficará para etapas posteriores.
+Nesta etapa, a IA do estudo principal terá contexto limitado ao assunto, à etapa atual e às informações de aprendizagem já disponíveis. As consultas independentes poderão receber o assunto atual como contexto opcional, sem alterar o estudo. A personalização avançada ficará para etapas posteriores.
 
 ### Etapa 6 — Importação de projetos
 
@@ -365,7 +388,7 @@ Nesta etapa, a IA terá contexto limitado: assunto atual e informações de apre
 
 - [ ] Importação por GitHub.
 - [ ] Importação de pastas locais.
-- [ ] Glossário interativo.
+- [ ] Evoluir a consulta técnica para um glossário interativo, conforme a seção 6.
 - [ ] Visualizações didáticas.
 - [ ] Revisão inteligente.
 - [ ] Adaptação mais avançada da IA ao histórico individual.
