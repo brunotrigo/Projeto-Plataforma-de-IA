@@ -79,85 +79,91 @@
         </div>
       </section>
 
-      <div class="study-workspace">
-        <section class="study-content-panel" aria-labelledby="content-title">
-          <header class="study-content-header">
-            <div>
-              <p class="study-overline">CONTEÚDO DA ETAPA</p>
-              <h2 id="content-title">Sua próxima etapa começa aqui</h2>
-            </div>
-            <span class="content-status">Nenhum estudo ativo</span>
-          </header>
+      <div class="study-memory-note" role="note">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M10 2.5a3 3 0 0 0-3 3v.2a3.5 3.5 0 0 0-2 6.1V13a2.5 2.5 0 0 0 2.5 2.5H8v2h4v-2h.5A2.5 2.5 0 0 0 15 13v-1.2a3.5 3.5 0 0 0-2-6.1v-.2a3 3 0 0 0-3-3Z" />
+          <path d="M8 8h4m-4 3h4" />
+        </svg>
+        <span><strong>Memória de aprendizagem compartilhada</strong><span class="memory-separator" aria-hidden="true">·</span> Conversas independentes</span>
+      </div>
 
-          <div class="study-empty-state">
-            <span class="study-empty-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" fill="none">
-                <path d="M7 7.5A2.5 2.5 0 0 1 9.5 5H26v21H9.5A2.5 2.5 0 0 1 7 23.5v-16Z" />
-                <path d="M7 23.5A2.5 2.5 0 0 1 9.5 21H26M12 10h8m-8 5h9" />
+      <div class="study-workspace">
+        <section class="study-chat-panel main-chat-panel" aria-labelledby="main-chat-title">
+          <header class="chat-panel-header main-chat-header">
+            <span class="chat-avatar main-chat-avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
+                <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7m-7 4h7" />
               </svg>
             </span>
-            <p class="study-overline">ESPAÇO DE APRENDIZAGEM</p>
-            <h3>Escolha um assunto para começar</h3>
-            <p>Quando um estudo for iniciado, o conteúdo da aula e a etapa atual aparecerão aqui.</p>
-            <a class="study-empty-link" href="/index.html">
-              Ir para a Home
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M4 10h12m-5-5 5 5-5 5" />
-              </svg>
-            </a>
+            <div class="chat-title-group">
+              <h2 id="main-chat-title">Chat Principal</h2>
+              <p>Ambiente de aprendizagem</p>
+            </div>
+            <span class="chat-purpose-label">CONDUÇÃO DA AULA</span>
+          </header>
+
+          <section class="chat-history main-chat-history" aria-label="Histórico do Chat Principal" aria-live="polite">
+            <div class="chat-message main-chat-message">
+              <span class="message-avatar main-message-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
+                  <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7m-7 4h7" />
+                </svg>
+              </span>
+              <div class="chat-message-content">
+                <span class="message-author">Chat Principal</span>
+                <p>Quando você iniciar um estudo, vou conduzir sua aprendizagem com explicações, exemplos e exercícios, oferecendo dicas e feedback ao longo das etapas.</p>
+              </div>
+            </div>
+
+            <div class="study-chat-empty-state">
+              <span class="study-empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
+                  <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7m-7 4h7" />
+                </svg>
+              </span>
+              <h3>Nenhum estudo selecionado</h3>
+              <p>Escolha um assunto na Home para começar. O conteúdo da aula e as atividades aparecerão nesta conversa.</p>
+              <a class="study-empty-link" href="/index.html">
+                Escolher assunto na Home
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M4 10h12m-5-5 5 5-5 5" />
+                </svg>
+              </a>
+            </div>
+          </section>
+
+          <div class="chat-composer main-chat-composer">
+            <label class="visually-hidden" for="main-chat-message">Mensagem para o Chat Principal</label>
+            <textarea id="main-chat-message" name="main-chat-message" rows="2" placeholder="Escreva sua mensagem..."></textarea>
+            <div class="chat-composer-footer">
+              <span>O envio ficará disponível quando a IA for integrada.</span>
+              <button class="chat-send-button main-send-button" type="button" aria-label="Enviar mensagem" disabled>
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="m17 3-5.2 14-2.9-5.9L3 8.2 17 3Z" />
+                  <path d="M8.9 11.1 12 8" />
+                </svg>
+              </button>
+            </div>
           </div>
-
-          <section class="study-materials" aria-labelledby="materials-title">
-            <div class="study-section-heading">
-              <div>
-                <p class="study-overline">MATERIAL DE APOIO</p>
-                <h3 id="materials-title">Exemplos e materiais</h3>
-              </div>
-              <span class="material-badge">Da etapa atual</span>
-            </div>
-            <div class="material-placeholder">
-              <span class="material-placeholder-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v17H7.5A2.5 2.5 0 0 1 5 17.5v-12Z" />
-                  <path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H20M9 7h7m-7 4h7" />
-                </svg>
-              </span>
-              <div>
-                <h4>Exemplos e recursos aparecerão aqui</h4>
-                <p>Materiais relacionados ao assunto serão apresentados junto ao conteúdo da etapa.</p>
-              </div>
-            </div>
-          </section>
-
-          <section class="study-exercise" aria-labelledby="exercise-title">
-            <div class="study-section-heading">
-              <div>
-                <p class="study-overline">HORA DE PRATICAR</p>
-                <h3 id="exercise-title">Exercícios da etapa</h3>
-              </div>
-              <span class="exercise-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="m8 12 2.5 2.5L16.5 8M12 3.5l2.4 1.22 2.67.39.39 2.67L18.7 10.2l-1.22 2.4-.39 2.67-2.67.39L12 16.9l-2.4-1.22-2.67-.39-.39-2.67-1.22-2.4 1.22-2.4.39-2.67 2.67-.39L12 3.5Z" />
-                </svg>
-              </span>
-            </div>
-            <p class="exercise-empty-copy">As atividades para praticar serão exibidas após o início de um estudo.</p>
-          </section>
         </section>
 
-        <aside class="tutor-panel" aria-labelledby="tutor-title">
-          <header class="tutor-header">
-            <span class="tutor-avatar" aria-hidden="true">
+        <aside class="study-chat-panel tutor-panel" aria-labelledby="tutor-title">
+          <header class="chat-panel-header tutor-header">
+            <span class="chat-avatar tutor-avatar" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 3.5v2m0 13v2m8.5-8.5h-2m-13 0h-2m13.51-6.01-1.42 1.42m-9.18 9.18-1.42 1.42m12.02 0-1.42-1.42m-9.18-9.18-1.42-1.42" />
                 <circle cx="12" cy="12" r="5" />
                 <path d="M10 12h.01M14 12h.01" />
               </svg>
             </span>
-            <div>
+            <div class="chat-title-group">
               <h2 id="tutor-title">Tutor IA</h2>
-              <p><span class="tutor-status-dot" aria-hidden="true"></span> Apoio ao aprendizado</p>
+              <p>Apoio ao aprendizado</p>
             </div>
+            <span class="tutor-status-dot" aria-hidden="true"></span>
           </header>
 
           <div class="tutor-context">
@@ -165,31 +171,31 @@
               <path d="M10 2.5v2m0 11v2m7.5-7.5h-2m-11 0h-2m10.13-5.13-1.42 1.42m-5.42 5.42-1.42 1.42m8.26 0-1.42-1.42m-5.42-5.42-1.42-1.42" />
               <circle cx="10" cy="10" r="4" />
             </svg>
-            <p>O tutor poderá esclarecer dúvidas sobre o assunto e a etapa atuais, sem alterar seu estudo.</p>
+            <p>Um espaço auxiliar para dúvidas sobre o assunto e a etapa atuais, sem controlar o andamento da aula.</p>
           </div>
 
-          <section class="tutor-conversation" aria-label="Histórico da conversa com o Tutor IA" aria-live="polite">
-            <div class="tutor-welcome-message">
-              <span class="message-avatar" aria-hidden="true">
+          <section class="chat-history tutor-conversation" aria-label="Histórico independente do Tutor IA" aria-live="polite">
+            <div class="chat-message tutor-welcome-message">
+              <span class="message-avatar tutor-message-avatar" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M12 3.5v2m0 13v2m8.5-8.5h-2m-13 0h-2m13.51-6.01-1.42 1.42m-9.18 9.18-1.42 1.42m12.02 0-1.42-1.42m-9.18-9.18-1.42-1.42" />
                   <circle cx="12" cy="12" r="5" />
                   <path d="M10 12h.01M14 12h.01" />
                 </svg>
               </span>
-              <div class="message-content">
+              <div class="chat-message-content tutor-message-content">
                 <span class="message-author">Tutor IA</span>
-                <p>Olá! Posso explicar um conceito de outra maneira, trazer exemplos ou ajudar com uma dúvida sobre a etapa atual.</p>
+                <p>Posso explicar um conceito de outra maneira, apresentar exemplos ou aprofundar um assunto. Esta conversa é independente do Chat Principal.</p>
               </div>
             </div>
           </section>
 
-          <div class="tutor-composer">
-            <label class="visually-hidden" for="tutor-question">Sua dúvida para o Tutor IA</label>
-            <textarea id="tutor-question" name="tutor-question" rows="2" placeholder="Escreva sua dúvida..." disabled></textarea>
-            <div class="composer-footer">
-              <span>Disponível quando o tutor for integrado.</span>
-              <button class="tutor-send-button" type="button" aria-label="Enviar dúvida" disabled>
+          <div class="chat-composer tutor-composer">
+            <label class="visually-hidden" for="tutor-question">Dúvida para o Tutor IA</label>
+            <textarea id="tutor-question" name="tutor-question" rows="2" placeholder="Escreva sua dúvida..."></textarea>
+            <div class="chat-composer-footer">
+              <span>O envio ficará disponível quando a IA for integrada.</span>
+              <button class="chat-send-button tutor-send-button" type="button" aria-label="Enviar dúvida ao Tutor IA" disabled>
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <path d="m17 3-5.2 14-2.9-5.9L3 8.2 17 3Z" />
                   <path d="M8.9 11.1 12 8" />
