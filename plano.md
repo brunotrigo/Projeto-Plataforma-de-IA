@@ -116,9 +116,9 @@ Ao importar um projeto, a IA deverá:
 | localStorage        | Em aprendizado          | Continuar de onde parou                 |
 | Promises            | Não iniciado            | Ensinar quando necessário               |
 
-A plataforma não deverá considerar um conceito dominado apenas porque ele apareceu em uma aula ou foi mencionado em uma conversa.
+A plataforma não deverá considerar um conceito dominado apenas porque ele apareceu em uma aula, foi mencionado em uma conversa ou porque o estudante afirmou ter entendido uma explicação.
 
-O nível de domínio deverá ser atualizado com base em exercícios, respostas, explicações e demonstrações práticas do estudante.
+O nível de domínio deverá ser atualizado com evidências de aprendizagem, como exercícios, respostas e demonstrações práticas do estudante. Compreender ou afirmar que compreendeu uma explicação poderá ser registrado na memória, mas não será suficiente, por si só, para marcar um conceito como dominado.
 
 ## 6. Organização das áreas da plataforma
 
@@ -130,26 +130,34 @@ A HOME será o ponto de entrada da plataforma. Ela deverá organizar matérias e
 
 ### 6.2. ESTUDO PRINCIPAL — Aprendizagem orientada
 
-O estudo principal será o ambiente central de aprendizagem. A área central deverá exibir o conteúdo da aula, a etapa atual e o progresso, com exemplos, exercícios, tentativas, dicas progressivas e feedback, conforme as seções 4 e 7.
+O estudo principal será o ambiente central de aprendizagem. Sua área central, à esquerda, será o **Chat Principal**, que conduzirá a aula por meio de mensagens, apresentando explicações, exemplos e exercícios, recebendo respostas do estudante e oferecendo dicas progressivas e feedback. Ele acompanhará as etapas e o progresso da aprendizagem, conforme as seções 4 e 7.
 
 As interações com IA dentro do estudo principal terão responsabilidades distintas:
 
 | Funcionalidade | Responsabilidade |
 | :--- | :--- |
-| Estudo principal | Exibir o conteúdo e acompanhar as etapas e o progresso. |
-| Tutor IA | Responder dúvidas sem modificar o estudo. |
+| Chat Principal | Conduzir a aula, receber respostas e acompanhar etapas e progresso. |
+| Tutor IA | Responder dúvidas sem modificar diretamente o andamento da aula. |
 | Personalizar estudo com IA | Propor modificações no planejamento e no conteúdo. |
 | Aprovação do estudante | Autorizar ou rejeitar a aplicação das modificações propostas. |
 
+O Chat Principal e o Tutor IA terão históricos de mensagens independentes, mas poderão consultar e contribuir para a mesma memória estruturada de aprendizagem, conforme a seção 9. Compartilhar essa memória não significa compartilhar ou misturar as conversas.
+
+#### Chat Principal — condução da aula
+
+O Chat Principal será a interação central do estudo: apresentará o conteúdo da etapa, explicações, exemplos e exercícios; receberá as respostas; e conduzirá a prática com dicas progressivas e feedback. A partir das evidências de aprendizagem, acompanhará as etapas e o progresso e poderá registrar informações relevantes na memória compartilhada.
+
 #### Tutor IA — dúvidas sobre o conteúdo
 
-O Tutor IA ficará em um chat lateral dedicado a dúvidas sobre o assunto e a etapa atuais. O estudante poderá pedir outra explicação, exemplos adicionais, esclarecimentos sobre conceitos ou trechos de código e aprofundamento de uma explicação.
+O Tutor IA ficará no painel lateral direito em um chat próprio, dedicado a dúvidas sobre o assunto e a etapa atuais. O estudante poderá pedir outra explicação, exemplos adicionais, esclarecimentos sobre conceitos ou trechos de código e aprofundamento de uma explicação.
 
-O Tutor IA não poderá modificar o conteúdo principal, reorganizar etapas, alterar exercícios, registrar tentativas, concluir atividades ou modificar o progresso do estudo. Seu histórico deverá permanecer distinto do histórico do chat de personalização e das consultas independentes.
+O Tutor IA não poderá modificar diretamente o conteúdo da aula, as etapas, os exercícios, as tentativas ou o progresso. Poderá consultar e contribuir com informações relevantes para a memória compartilhada, sem alterar o andamento da aula. Seu histórico permanecerá separado do histórico do Chat Principal e dos demais históricos descritos nesta seção.
+
+O domínio de conceitos não será atribuído automaticamente por uma explicação compreendida ou pela declaração do estudante. As evidências e os critérios para avaliar domínio estão definidos na seção 5.
 
 #### Personalizar estudo com IA — modificar o estudo principal
 
-A opção **Modificar estudo** ou **Personalizar estudo com IA** abrirá um segundo chat, independente do Tutor IA, dedicado a solicitar alterações no planejamento e no conteúdo do estudo. Esse chat deverá abrir em um painel maior e manter o conteúdo do estudo visível ao fundo sempre que possível.
+A opção **Modificar estudo** ou **Personalizar estudo com IA** abrirá um terceiro chat, independente do Chat Principal e do Tutor IA, dedicado a solicitar alterações no planejamento e no conteúdo do estudo. Esse chat deverá abrir em um painel maior e manter o conteúdo do estudo visível ao fundo sempre que possível.
 
 O estudante poderá solicitar alterações como mudar o assunto principal, adicionar ou remover conteúdos, criar ou reorganizar etapas, aprofundar um assunto, simplificar conteúdo avançado ou ajustar o planejamento às dificuldades identificadas.
 
@@ -164,7 +172,7 @@ A IA não poderá aplicar alterações imediatamente após receber o pedido. O f
 
 Se a proposta puder afetar etapas concluídas, exercícios ou informações de domínio, a IA deverá explicar o impacto antes da aprovação. A aplicação deverá preservar o histórico de aprendizagem e não apagar indevidamente o progresso já registrado.
 
-O histórico do chat de personalização deverá ser separado do histórico do Tutor IA, das consultas independentes e dos registros de aprendizagem.
+O histórico do chat de personalização deverá ser separado dos históricos do Chat Principal e do Tutor IA, das consultas independentes e dos registros de aprendizagem.
 
 ### 6.3. CONSULTAS INDEPENDENTES — Dúvidas sem interromper o estudo
 
@@ -181,7 +189,7 @@ As consultas independentes não poderão:
 - Atualizar automaticamente o nível de domínio dos conceitos.
 - Alterar o progresso registrado da aula.
 
-Elas poderão receber o assunto atual como contexto opcional para melhorar a explicação, sem modificar o estado do estudo. Seu histórico deverá permanecer separado do histórico de aprendizagem, das tentativas, do progresso do estudante e dos históricos do Tutor IA e do chat de personalização. Essas consultas não deverão ser confundidas com os chats do estudo principal.
+Elas poderão receber o assunto atual como contexto opcional para melhorar a explicação, sem modificar o estado do estudo. Seu histórico deverá permanecer separado do histórico de aprendizagem, das tentativas, do progresso do estudante e dos históricos do Chat Principal, do Tutor IA e do chat de personalização. O compartilhamento de memória definido para os chats do estudo principal não mistura nem incorpora as conversas das consultas independentes.
 
 ### Evolução da consulta técnica — Glossário interativo
 
@@ -260,6 +268,20 @@ A memória deverá registrar, de forma estruturada:
 
 O estudante deverá conseguir retomar o aprendizado sem precisar explicar novamente todo o seu histórico.
 
+### 9.5. Memória compartilhada dos chats do estudo principal
+
+O Chat Principal e o Tutor IA poderão consultar e contribuir para uma mesma memória estruturada de aprendizagem. Essa memória poderá registrar:
+
+- Conceitos estudados.
+- Explicações apresentadas e conceitos que o estudante demonstrou ou declarou compreender.
+- Dificuldades identificadas.
+- Conhecimentos que ainda precisam ser verificados com evidências.
+- Evidências de aprendizagem, como exercícios, respostas e demonstrações práticas.
+
+Uma informação relevante identificada no Tutor IA poderá contextualizar a próxima interação do Chat Principal, e vice-versa. Essa memória compartilhada não unifica os históricos de mensagens: cada chat manterá sua conversa independente.
+
+Compreender uma explicação ou afirmar que aprendeu não significa automaticamente dominar o conceito. A memória poderá registrar esses sinais, mas o domínio continuará dependendo de evidências como exercícios, respostas e demonstrações práticas, conforme as seções 5 e 6.2. O Tutor IA poderá contribuir com informações para a memória, mas não poderá alterar diretamente o andamento da aula.
+
 ## 10. Tutor com inteligência artificial
 
 A IA deverá ser capaz de:
@@ -275,7 +297,7 @@ A IA deverá ser capaz de:
 
 As respostas deverão considerar o histórico de aprendizagem, mas sem presumir informações que não estejam registradas ou comprovadas.
 
-No estudo principal, essas responsabilidades serão separadas, conforme a seção 6.2. A análise de respostas e o feedback das atividades pertencem ao fluxo de aprendizagem; o Tutor IA responde dúvidas sem modificar o estudo, e a personalização apresenta alterações como propostas que aguardam a aprovação do estudante.
+No estudo principal, essas responsabilidades serão separadas, conforme a seção 6.2. O Chat Principal conduz a aula e acompanha o progresso com base em evidências de aprendizagem. O Tutor IA responde dúvidas sem modificar diretamente o andamento da aula; ambos podem consultar e contribuir para a memória compartilhada, sem compartilhar seus históricos de mensagens. A personalização apresenta alterações como propostas que aguardam a aprovação do estudante.
 
 ## 11. Escopo inicial — MVP
 
@@ -289,15 +311,15 @@ A prioridade é construir algo utilizável rapidamente e evoluir gradualmente.
 2. Cadastro de aulas e conteúdos.
 3. Estudo por assunto, com conteúdos organizados em etapas.
 4. Exercícios com tentativas, dicas e feedback.
-5. Integração inicial com IA por meio do backend para apoiar o Tutor IA no estudo principal.
+5. Integração inicial com IA por meio do backend para apoiar o Chat Principal e o Tutor IA no estudo principal.
 6. Consultas independentes básicas, técnicas e de perguntas livres, conforme a seção 6.
-7. IA capaz de explicar conceitos, oferecer dicas progressivas e analisar respostas no fluxo de aprendizagem.
-8. Tutor IA em chat lateral para esclarecer dúvidas sobre o assunto e a etapa atuais, sem modificar o estudo principal.
-9. Registro local do progresso e memória inicial de conceitos aprendidos para contextualizar o estudo.
+7. Chat Principal para conduzir a aula, apresentar explicações, exemplos e exercícios, receber respostas, oferecer dicas progressivas e feedback e acompanhar etapas e progresso.
+8. Tutor IA em chat lateral para esclarecer dúvidas sobre o assunto e a etapa atuais, sem modificar diretamente o andamento da aula.
+9. Registro local do progresso e memória inicial compartilhada entre Chat Principal e Tutor IA, com históricos de mensagens separados e domínio de conceitos baseado em evidências.
 
 A IA do MVP será limitada e terá como objetivo validar a experiência de aprendizagem. As consultas independentes não poderão alterar o estado do estudo e deverão manter o próprio histórico, separado dos dados de aprendizagem, tentativas e progresso. A análise de projetos importados e o uso avançado do histórico não fazem parte dessa primeira integração.
 
-O chat lateral do Tutor IA permanece no MVP como interface para as capacidades de explicação e esclarecimento já priorizadas. O chat Personalizar estudo com IA não faz parte do MVP: como poderá alterar o planejamento e o conteúdo, será desenvolvido posteriormente com proposta prévia, aprovação do estudante e proteção do progresso, conforme as seções 6.2 e 15.
+O Chat Principal e o Tutor IA integram o MVP com responsabilidades e históricos distintos, consultando e contribuindo para a mesma memória inicial de aprendizagem. O chat Personalizar estudo com IA não faz parte do MVP: como poderá alterar o planejamento e o conteúdo, será desenvolvido posteriormente com proposta prévia, aprovação do estudante e proteção do progresso, conforme as seções 6.2 e 15.
 
 ### Funcionalidades para etapas posteriores
 
@@ -395,26 +417,30 @@ A possibilidade comercial deverá ser considerada na organização do projeto, m
 - [ ] Registrar nível de domínio.
 - [ ] Registrar dificuldades.
 - [ ] Permitir retomar estudos.
+- [ ] Disponibilizar uma memória estruturada compartilhada entre Chat Principal e Tutor IA, com conceitos estudados, explicações compreendidas, dificuldades, conhecimentos a verificar e evidências de aprendizagem.
+- [ ] Usar evidências como exercícios, respostas e demonstrações práticas para avaliar domínio, sem considerar suficiente apenas a compreensão de uma explicação ou a declaração do estudante.
 - [ ] Manter o histórico das consultas independentes separado do histórico de aprendizagem, das tentativas e do progresso.
-- [ ] Manter separados os históricos do Tutor IA e do chat de personalização.
+- [ ] Manter separados os históricos do Chat Principal e do Tutor IA, sem misturar suas conversas ao compartilhar a memória.
+- [ ] Manter o histórico do chat de personalização separado dos chats do estudo e das consultas independentes.
 
 ### Etapa 5 — Integração inicial com inteligência artificial
 
-Objetivo: testar a função central da plataforma com uma IA tutora simples, sem tentar implementar todos os recursos adaptativos de uma vez.
+Objetivo: testar a função central da plataforma com o Chat Principal e o Tutor IA, mantendo suas responsabilidades distintas sem tentar implementar todos os recursos adaptativos de uma vez.
 
 - [ ] Criar no backend uma rota para receber solicitações de estudo.
 - [ ] Conectar o backend a uma API de IA.
 - [ ] Proteger a chave da API no ambiente do servidor.
-- [ ] Permitir que a IA explique um conceito em linguagem simples.
-- [ ] Permitir que a IA ofereça dicas progressivas sem entregar imediatamente a solução.
-- [ ] Permitir que a IA analise uma tentativa e dê feedback.
-- [ ] Disponibilizar o Tutor IA em um chat lateral para dúvidas sobre o assunto e a etapa atuais, sem alterar conteúdo, etapas, exercícios, tentativas, conclusão de atividades ou progresso.
+- [ ] Disponibilizar o Chat Principal para conduzir a aula por mensagens, apresentando conteúdo, explicações, exemplos e exercícios, recebendo respostas e oferecendo dicas progressivas e feedback.
+- [ ] Acompanhar etapas e progresso no Chat Principal com base em evidências de aprendizagem.
+- [ ] Disponibilizar o Tutor IA em um chat lateral para dúvidas sobre o assunto e a etapa atuais, sem alterar diretamente conteúdo, etapas, exercícios, tentativas, conclusão de atividades ou progresso.
+- [ ] Permitir que Chat Principal e Tutor IA consultem e contribuam para a mesma memória estruturada, mantendo históricos de mensagens independentes.
+- [ ] Não considerar uma explicação compreendida ou a declaração do estudante como evidência suficiente, por si só, para marcar domínio de conceito.
 - [ ] Disponibilizar consultas técnicas e perguntas livres independentes do estudo principal.
 - [ ] Garantir que consultas independentes não alterem etapas, tentativas, conclusão de atividades, domínio de conceitos ou progresso.
 - [ ] Permitir o envio opcional do assunto atual como contexto das consultas, sem modificar o estado do estudo.
 - [ ] Testar a integração e tratar erros ou indisponibilidade da API.
 
-Nesta etapa, a IA do estudo principal terá contexto limitado ao assunto, à etapa atual e às informações de aprendizagem já disponíveis. As consultas independentes poderão receber o assunto atual como contexto opcional, sem alterar o estudo. A personalização avançada ficará para etapas posteriores.
+Nesta etapa, o Chat Principal e o Tutor IA terão históricos separados e poderão usar a memória compartilhada, além do contexto do assunto e da etapa atuais. As consultas independentes poderão receber o assunto atual como contexto opcional, sem alterar o estudo nem misturar seus históricos com os chats do estudo principal. A personalização do estudo ficará para etapas posteriores.
 
 ### Etapa 6 — Importação de projetos
 
@@ -429,7 +455,7 @@ Nesta etapa, a IA do estudo principal terá contexto limitado ao assunto, à eta
 - [ ] Importação por GitHub.
 - [ ] Importação de pastas locais.
 - [ ] Evoluir a consulta técnica para um glossário interativo, conforme a seção 6.
-- [ ] Criar o chat Personalizar estudo com IA, separado do Tutor IA, para apresentar propostas de alterações no planejamento e no conteúdo.
+- [ ] Criar o chat Personalizar estudo com IA, separado do Chat Principal e do Tutor IA, para apresentar propostas de alterações no planejamento e no conteúdo.
 - [ ] Aplicar propostas de personalização somente após aprovação explícita do estudante e explicar previamente impactos sobre etapas concluídas, exercícios e informações de domínio, preservando o histórico de aprendizagem e o progresso.
 - [ ] Visualizações didáticas.
 - [ ] Revisão inteligente.
