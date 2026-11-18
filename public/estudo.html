@@ -6,7 +6,7 @@
     <title>Estudo principal | Plataforma de Estudos com IA</title>
     <link rel="stylesheet" href="/css/style.css">
   </head>
-  <body>
+  <body class="study-page">
     <header class="site-header">
       <a class="brand" href="/index.html" aria-label="Plataforma de Estudos com IA — início">
         <span class="brand-mark" aria-hidden="true">
@@ -31,76 +31,171 @@
       </div>
     </header>
 
-    <main class="area-main page-shell">
-      <section class="area-heading" aria-labelledby="page-title">
-        <p class="eyebrow"><span class="eyebrow-line"></span> APRENDIZAGEM ORIENTADA</p>
-        <h1 id="page-title">Estudo principal</h1>
-        <p class="area-description">
-          Um espaço para acompanhar o assunto atual e avançar no seu aprendizado.
-        </p>
-        <nav class="area-links" aria-label="Atalhos para outras áreas">
-          <a class="text-link" href="/index.html">
-            Voltar para a Home
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M16 10H4m5 5-5-5 5-5" />
-            </svg>
-          </a>
-          <a class="text-link" href="/consultas.html">
-            Consultas independentes
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M4 10h12m-5-5 5 5-5 5" />
-            </svg>
-          </a>
-        </nav>
-      </section>
-
-      <section class="subject-context" aria-labelledby="subject-label">
-        <span class="study-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
-            <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7" />
-          </svg>
-        </span>
-        <div class="subject-context-copy">
-          <p class="card-kicker">ASSUNTO EM ESTUDO</p>
-          <h2 id="subject-label">Nenhum assunto selecionado</h2>
+    <main class="area-main page-shell study-main">
+      <section class="study-page-heading" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> APRENDIZAGEM ORIENTADA</p>
+          <h1 id="page-title">Estudo principal</h1>
+          <p class="study-page-description">Seu espaço para aprender uma etapa de cada vez.</p>
         </div>
-        <p class="subject-context-note">O assunto atual será identificado aqui.</p>
+        <a class="study-back-link" href="/index.html">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M16 10H4m5 5-5-5 5-5" />
+          </svg>
+          Voltar para a Home
+        </a>
       </section>
 
-      <div class="study-layout">
-        <section class="workspace-panel" aria-labelledby="content-title">
-          <div class="panel-heading">
-            <p class="card-kicker">SUA JORNADA</p>
-            <h2 id="content-title">Conteúdos e etapas</h2>
+      <section class="study-overview" aria-label="Contexto e progresso do estudo">
+        <div class="study-overview-subject">
+          <span class="study-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
+              <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7" />
+            </svg>
+          </span>
+          <div>
+            <p class="study-overline">ASSUNTO ATUAL</p>
+            <h2>Nenhum estudo selecionado</h2>
           </div>
-          <div class="workspace-placeholder">
-            <span class="placeholder-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v17H7.5A2.5 2.5 0 0 1 5 17.5v-12Z" />
-                <path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H20M9 7h7m-7 4h7" />
+        </div>
+
+        <div class="study-overview-step">
+          <span class="step-indicator" aria-hidden="true">—</span>
+          <div>
+            <p class="study-overline">ETAPA ATUAL</p>
+            <p class="overview-value">Aguardando início</p>
+          </div>
+        </div>
+
+        <div class="study-overview-progress">
+          <div class="progress-label">
+            <span class="study-overline">PROGRESSO DO ESTUDO</span>
+            <span class="progress-pending">Será exibido ao iniciar</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <span></span>
+          </div>
+        </div>
+      </section>
+
+      <div class="study-workspace">
+        <section class="study-content-panel" aria-labelledby="content-title">
+          <header class="study-content-header">
+            <div>
+              <p class="study-overline">CONTEÚDO DA ETAPA</p>
+              <h2 id="content-title">Sua próxima etapa começa aqui</h2>
+            </div>
+            <span class="content-status">Nenhum estudo ativo</span>
+          </header>
+
+          <div class="study-empty-state">
+            <span class="study-empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path d="M7 7.5A2.5 2.5 0 0 1 9.5 5H26v21H9.5A2.5 2.5 0 0 1 7 23.5v-16Z" />
+                <path d="M7 23.5A2.5 2.5 0 0 1 9.5 21H26M12 10h8m-8 5h9" />
               </svg>
             </span>
-            <h3>O conteúdo do estudo aparecerá aqui</h3>
-            <p>Este espaço será dedicado às etapas e aos materiais do assunto em estudo.</p>
+            <p class="study-overline">ESPAÇO DE APRENDIZAGEM</p>
+            <h3>Escolha um assunto para começar</h3>
+            <p>Quando um estudo for iniciado, o conteúdo da aula e a etapa atual aparecerão aqui.</p>
+            <a class="study-empty-link" href="/index.html">
+              Ir para a Home
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10h12m-5-5 5 5-5 5" />
+              </svg>
+            </a>
           </div>
+
+          <section class="study-materials" aria-labelledby="materials-title">
+            <div class="study-section-heading">
+              <div>
+                <p class="study-overline">MATERIAL DE APOIO</p>
+                <h3 id="materials-title">Exemplos e materiais</h3>
+              </div>
+              <span class="material-badge">Da etapa atual</span>
+            </div>
+            <div class="material-placeholder">
+              <span class="material-placeholder-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v17H7.5A2.5 2.5 0 0 1 5 17.5v-12Z" />
+                  <path d="M5 17.5A2.5 2.5 0 0 1 7.5 15H20M9 7h7m-7 4h7" />
+                </svg>
+              </span>
+              <div>
+                <h4>Exemplos e recursos aparecerão aqui</h4>
+                <p>Materiais relacionados ao assunto serão apresentados junto ao conteúdo da etapa.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="study-exercise" aria-labelledby="exercise-title">
+            <div class="study-section-heading">
+              <div>
+                <p class="study-overline">HORA DE PRATICAR</p>
+                <h3 id="exercise-title">Exercícios da etapa</h3>
+              </div>
+              <span class="exercise-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="m8 12 2.5 2.5L16.5 8M12 3.5l2.4 1.22 2.67.39.39 2.67L18.7 10.2l-1.22 2.4-.39 2.67-2.67.39L12 16.9l-2.4-1.22-2.67-.39-.39-2.67-1.22-2.4 1.22-2.4.39-2.67 2.67-.39L12 3.5Z" />
+                </svg>
+              </span>
+            </div>
+            <p class="exercise-empty-copy">As atividades para praticar serão exibidas após o início de um estudo.</p>
+          </section>
         </section>
 
-        <aside class="workspace-panel tutor-panel" aria-labelledby="tutor-title">
-          <div class="panel-heading">
-            <p class="card-kicker">APOIO AO APRENDIZADO</p>
-            <h2 id="tutor-title">Tutor de IA</h2>
-          </div>
-          <div class="workspace-placeholder tutor-placeholder">
-            <span class="placeholder-icon tutor-placeholder-icon" aria-hidden="true">
+        <aside class="tutor-panel" aria-labelledby="tutor-title">
+          <header class="tutor-header">
+            <span class="tutor-avatar" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 3.5v2m0 13v2m8.5-8.5h-2m-13 0h-2m13.51-6.01-1.42 1.42m-9.18 9.18-1.42 1.42m12.02 0-1.42-1.42m-9.18-9.18-1.42-1.42" />
                 <circle cx="12" cy="12" r="5" />
                 <path d="M10 12h.01M14 12h.01" />
               </svg>
             </span>
-            <h3>Seu tutor acompanhará o estudo</h3>
-            <p>O espaço de interação com a IA ficará disponível nesta área.</p>
+            <div>
+              <h2 id="tutor-title">Tutor IA</h2>
+              <p><span class="tutor-status-dot" aria-hidden="true"></span> Apoio ao aprendizado</p>
+            </div>
+          </header>
+
+          <div class="tutor-context">
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M10 2.5v2m0 11v2m7.5-7.5h-2m-11 0h-2m10.13-5.13-1.42 1.42m-5.42 5.42-1.42 1.42m8.26 0-1.42-1.42m-5.42-5.42-1.42-1.42" />
+              <circle cx="10" cy="10" r="4" />
+            </svg>
+            <p>O tutor poderá esclarecer dúvidas sobre o assunto e a etapa atuais, sem alterar seu estudo.</p>
+          </div>
+
+          <section class="tutor-conversation" aria-label="Histórico da conversa com o Tutor IA" aria-live="polite">
+            <div class="tutor-welcome-message">
+              <span class="message-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3.5v2m0 13v2m8.5-8.5h-2m-13 0h-2m13.51-6.01-1.42 1.42m-9.18 9.18-1.42 1.42m12.02 0-1.42-1.42m-9.18-9.18-1.42-1.42" />
+                  <circle cx="12" cy="12" r="5" />
+                  <path d="M10 12h.01M14 12h.01" />
+                </svg>
+              </span>
+              <div class="message-content">
+                <span class="message-author">Tutor IA</span>
+                <p>Olá! Posso explicar um conceito de outra maneira, trazer exemplos ou ajudar com uma dúvida sobre a etapa atual.</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="tutor-composer">
+            <label class="visually-hidden" for="tutor-question">Sua dúvida para o Tutor IA</label>
+            <textarea id="tutor-question" name="tutor-question" rows="2" placeholder="Escreva sua dúvida..." disabled></textarea>
+            <div class="composer-footer">
+              <span>Disponível quando o tutor for integrado.</span>
+              <button class="tutor-send-button" type="button" aria-label="Enviar dúvida" disabled>
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="m17 3-5.2 14-2.9-5.9L3 8.2 17 3Z" />
+                  <path d="M8.9 11.1 12 8" />
+                </svg>
+              </button>
+            </div>
           </div>
         </aside>
       </div>
