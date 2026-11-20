@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  getEffectiveConceptStatus,
   getConversationHistory,
   getLearningMemory,
   recordLearningSignal,
@@ -8,29 +9,41 @@ import {
   saveLearningEvidence,
 } from "../public/js/storage/learningData.mjs";
 import { STORES } from "../public/js/storage/database.mjs";
+import { createAttempt, createStudyProgress } from "../public/js/storage/models.mjs";
 
 function createMemoryRepository() {
   const stores = new Map(Object.values(STORES).map((name) => [name, new Map()]));
+  const recordKey = (storeName, record) => (
+    storeName === STORES.studyProgress ? record.studyId : record.id
+  );
 
   return {
     async add(storeName, record) {
       const store = stores.get(storeName);
-      if (store.has(record.id)) {
+      const key = recordKey(storeName, record);
+      if (store.has(key)) {
         const error = new Error("Duplicate key.");
         error.name = "ConstraintError";
         throw error;
       }
-      store.set(record.id, record);
+      store.set(key, record);
     },
     async addMany(entries) {
       for (const entry of entries) {
-        if (stores.get(entry.storeName).has(entry.record.id)) {
+        if (stores.get(entry.storeName).has(recordKey(entry.storeName, entry.record))) {
           const error = new Error("Duplicate key.");
           error.name = "ConstraintError";
           throw error;
         }
       }
-      entries.forEach((entry) => stores.get(entry.storeName).set(entry.record.id, entry.record));
+      entries.forEach((entry) => stores
+        .get(entry.storeName)
+        .set(recordKey(entry.storeName, entry.record), entry.record));
+    },
+    async putMany(entries) {
+      entries.forEach((entry) => stores
+        .get(entry.storeName)
+        .set(recordKey(entry.storeName, entry.record), entry.record));
     },
     async getAllByIndex(storeName, indexName, value) {
       return [...stores.get(storeName).values()]
@@ -40,7 +53,7 @@ function createMemoryRepository() {
       return stores.get(storeName).get(key);
     },
     async put(storeName, record) {
-      stores.get(storeName).set(record.id, record);
+      stores.get(storeName).set(recordKey(storeName, record), record);
     },
     async update(storeName, key, updater) {
       const record = stores.get(storeName).get(key);
@@ -53,6 +66,46 @@ function createMemoryRepository() {
     },
   };
 }
+
+test("derives legacy concept status from assessed evidence, not declarations", () => {
+  const concept = {
+    id: "concept-1",
+    status: "not_started",
+    updatedAt: "2024-01-01T00:00:00.000Z",
+  };
+  const evidence = [{
+    conceptId: concept.id,
+    assessment: "unassessed",
+    createdAt: "2024-02-01T00:00:00.000Z",
+  }];
+  const signals = [{
+    conceptId: concept.id,
+    kind: "understood",
+    createdAt: "2024-03-01T00:00:00.000Z",
+  }];
+
+  assert.equal(getEffectiveConceptStatus(concept, [], signals), "not_started");
+  assert.equal(getEffectiveConceptStatus(concept, evidence, signals), "learning");
+  assert.equal(getEffectiveConceptStatus(concept, [
+    ...evidence,
+    {
+      conceptId: concept.id,
+      assessment: "demonstrated",
+      createdAt: "2024-04-01T00:00:00.000Z",
+    },
+  ], signals), "mastered");
+  assert.equal(getEffectiveConceptStatus({
+    ...concept,
+    status: "mastered",
+    updatedAt: "2024-04-01T00:00:00.000Z",
+  }, [
+    {
+      conceptId: concept.id,
+      assessment: "needs_practice",
+      createdAt: "2024-05-01T00:00:00.000Z",
+    },
+  ], signals), "review");
+});
 
 test("stores conversation channels independently", async () => {
   const repository = createMemoryRepository();
@@ -117,10 +170,20 @@ test("stores exercise evidence separately and rejects consultation writes to stu
     details: "Precisa demonstrar o conceito.",
   });
   const memoryBefore = await getLearningMemory(repository, "study-1");
+  const attempt = createAttempt({
+    studyId: "study-1",
+    stageId: "stage-1",
+    exerciseId: "exercise-1",
+    answer: "Resposta prática registrada.",
+  });
+  await repository.add(STORES.attempts, attempt);
+  const progress = createStudyProgress({ studyId: "study-1", currentStageId: "stage-1" });
+  await repository.add(STORES.studyProgress, progress);
 
   await saveLearningEvidence(repository, {
     studyId: "study-1",
     conceptId: signal.conceptId,
+    attemptId: attempt.id,
     type: "exercise_response",
     details: "Resposta prática registrada.",
   });
@@ -129,7 +192,19 @@ test("stores exercise evidence separately and rejects consultation writes to stu
 
   assert.deepEqual(memoryBefore.concepts[0].evidence, []);
   assert.deepEqual(memoryAfter.concepts[0].evidence, ["Resposta prática registrada."]);
-  assert.equal(memoryAfter.concepts[0].status, "not_started");
+  assert.equal(memoryAfter.concepts[0].status, "learning");
+  assert.equal((await repository.get(STORES.studyProgress, "study-1")).completedStageIds.length, 0);
+  await assert.rejects(
+    saveLearningEvidence(repository, {
+      studyId: "study-1",
+      conceptId: signal.conceptId,
+      attemptId: "missing-attempt",
+      type: "exercise_response",
+      assessment: "demonstrated",
+      details: "Tentativa inexistente.",
+    }),
+    TypeError,
+  );
   await assert.rejects(
     saveConversationMessage(repository, "technical", {
       studyId: "study-1",
@@ -139,4 +214,79 @@ test("stores exercise evidence separately and rejects consultation writes to stu
     }),
     TypeError,
   );
+});
+
+test("requires explicitly assessed evidence for mastery and revisits mastery after difficulty", async () => {
+  const repository = createMemoryRepository();
+  const signal = await recordLearningSignal(repository, {
+    studyId: "study-1",
+    conceptName: "Funções",
+    source: "main",
+    kind: "understood",
+    details: "O estudante afirmou que entendeu.",
+  });
+  assert.equal((await getLearningMemory(repository, "study-1")).concepts[0].status, "not_started");
+
+  const attempt = createAttempt({
+    studyId: "study-1",
+    stageId: "stage-1",
+    exerciseId: "exercise-1",
+    answer: "Uma resposta enviada, ainda sem avaliação.",
+  });
+  await repository.add(STORES.attempts, attempt);
+  const progress = createStudyProgress({ studyId: "study-1", currentStageId: "stage-1" });
+  await repository.add(STORES.studyProgress, progress);
+
+  await saveLearningEvidence(repository, {
+    studyId: "study-1",
+    conceptId: signal.conceptId,
+    attemptId: attempt.id,
+    type: "exercise_response",
+    assessment: "demonstrated",
+    details: "A resposta aplicou corretamente o conceito.",
+  });
+
+  assert.equal((await getLearningMemory(repository, "study-1")).concepts[0].status, "mastered");
+  const unchangedProgress = await repository.get(STORES.studyProgress, "study-1");
+  assert.equal(unchangedProgress.currentStageId, "stage-1");
+  assert.deepEqual(unchangedProgress.completedStageIds, []);
+
+  await recordLearningSignal(repository, {
+    studyId: "study-1",
+    conceptName: "Funções",
+    source: "tutor",
+    kind: "difficulty",
+    details: "A dificuldade voltou em uma aplicação posterior.",
+  });
+
+  assert.equal((await getLearningMemory(repository, "study-1")).concepts[0].status, "review");
+});
+
+test("does not promote a concept from an unassessed response", async () => {
+  const repository = createMemoryRepository();
+  const signal = await recordLearningSignal(repository, {
+    studyId: "study-1",
+    conceptName: "Escopo",
+    source: "main",
+    kind: "needs_verification",
+    details: "Ainda precisa demonstrar o conceito.",
+  });
+  const attempt = createAttempt({
+    studyId: "study-1",
+    stageId: "stage-1",
+    exerciseId: "exercise-1",
+    answer: "Resposta ainda não avaliada.",
+  });
+  await repository.add(STORES.attempts, attempt);
+
+  await saveLearningEvidence(repository, {
+    studyId: "study-1",
+    conceptId: signal.conceptId,
+    attemptId: attempt.id,
+    type: "exercise_response",
+    details: "Resposta registrada, sem resultado de avaliação.",
+  });
+
+  const memory = await getLearningMemory(repository, "study-1");
+  assert.equal(memory.concepts[0].status, "learning");
 });

@@ -317,7 +317,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.5 e F5.2.
 - **Critérios de conclusão:** compreensão declarada ou explicação apresentada não altera automaticamente um conceito para dominado.
 - **Testes e verificações:** testes negativos para declarações de compreensão e testes positivos com evidências registradas.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** estados dos conceitos são atualizados por evidências explicitamente avaliadas: somente `demonstrated` concede domínio; `needs_practice` mantém aprendizado ou solicita revisão; evidências não avaliadas e declarações de compreensão não concedem domínio. Evidências de exercícios precisam referenciar tentativas enviadas do mesmo estudo. Testes confirmam que domínio não altera conclusão de etapas e que dificuldades após domínio solicitam revisão. Dados legados têm o estado efetivo derivado dos registros sem presumir domínio. O resultado da avaliação é uma entrada explícita do serviço; não há correção automática ou interface de avaliação nesta tarefa, enquanto a integração com IA da F5.3 permanece bloqueada. `npm.cmd test` passou (30 testes), e a verificação no navegador confirmou estado e recomendação coerentes sem alterar progresso.
 
 ### F5.5 — Recomendar continuação
 
@@ -325,7 +326,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.3 e F5.4.
 - **Critérios de conclusão:** a recomendação preserva informações reais e não presume conhecimento não evidenciado.
 - **Testes e verificações:** cenários com conceitos dominados, em aprendizado e não iniciados.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** recomendação determinística considera etapa atual e concluída, exercícios, tentativas e avaliações, estados efetivos dos conceitos e dificuldades. Tentativas sem avaliação solicitam revisão da resposta; avaliações que indicam prática recomendam nova tentativa; conceitos não iniciados não são tratados como dominados; a próxima etapa só é sugerida quando a anterior consta como concluída. Testes cobrem esses cenários, inclusive evidência legada não avaliada; `npm.cmd test` passou (30 testes). Verificação no navegador confirmou que recomendação e estado do conceito não avançam o progresso.
 
 ---
 

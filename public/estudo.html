@@ -81,6 +81,15 @@
         </div>
       </section>
 
+      <section class="study-next-activity" id="next-activity" aria-labelledby="next-activity-title" aria-live="polite" hidden>
+        <div>
+          <p class="study-overline">PRÓXIMA ATIVIDADE RECOMENDADA</p>
+          <h2 id="next-activity-title"></h2>
+          <p id="next-activity-reason"></p>
+        </div>
+        <button class="secondary-button" id="next-activity-action" type="button" hidden></button>
+      </section>
+
       <div class="study-memory-note" role="note">
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <path d="M10 2.5a3 3 0 0 0-3 3v.2a3.5 3.5 0 0 0-2 6.1V13a2.5 2.5 0 0 0 2.5 2.5H8v2h4v-2h.5A2.5 2.5 0 0 0 15 13v-1.2a3.5 3.5 0 0 0-2-6.1v-.2a3 3 0 0 0-3-3Z" />
@@ -148,6 +157,10 @@
                   </form>
                 </section>
               </article>
+              <section class="learning-concepts" id="learning-concepts" aria-labelledby="learning-concepts-title" hidden>
+                <h3 id="learning-concepts-title">Conhecimentos deste estudo</h3>
+                <ul id="learning-concept-list"></ul>
+              </section>
               <form class="lesson-stage-form" id="stage-form" hidden>
                 <label for="stage-title-input">Nome da etapa</label>
                 <input id="stage-title-input" name="stage-title" type="text" maxlength="120" required>

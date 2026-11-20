@@ -6,6 +6,7 @@ export const LEARNING_STATUSES = Object.freeze([
 ]);
 
 const EVIDENCE_TYPES = new Set(["exercise_response", "practical_demonstration"]);
+const EVIDENCE_ASSESSMENTS = new Set(["unassessed", "demonstrated", "needs_practice"]);
 
 function readText(value, field, maxLength) {
   if (typeof value !== "string") {
@@ -150,11 +151,15 @@ export function createLearningEvidence({
   conceptId,
   attemptId,
   type,
+  assessment = "unassessed",
   details,
   now = new Date(),
 }) {
   if (!EVIDENCE_TYPES.has(type)) {
     throw new TypeError("type must identify an exercise response or practical demonstration.");
+  }
+  if (!EVIDENCE_ASSESSMENTS.has(assessment)) {
+    throw new TypeError("assessment must identify an unassessed, demonstrated, or practice-needed result.");
   }
 
   return {
@@ -163,6 +168,7 @@ export function createLearningEvidence({
     conceptId: readText(conceptId, "conceptId", 80),
     attemptId: attemptId === undefined ? null : readText(attemptId, "attemptId", 80),
     type,
+    assessment,
     details: readText(details, "details", 2000),
     createdAt: timestamp(now),
   };

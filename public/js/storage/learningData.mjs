@@ -86,8 +86,45 @@ export async function getConversationHistory(repository, channel, conversationId
 
 export async function saveLearningEvidence(repository, evidence) {
   const record = createLearningEvidence(evidence);
+  const [concept, attempt] = await Promise.all([
+    repository.get(STORES.concepts, record.conceptId),
+    record.attemptId === null
+      ? Promise.resolve(undefined)
+      : repository.get(STORES.attempts, record.attemptId),
+  ]);
 
-  await repository.add(STORES.learningEvidence, record);
+  if (!concept || concept.studyId !== record.studyId) {
+    throw new TypeError("Learning evidence must reference a concept in the same study.");
+  }
+  if (record.type === "exercise_response" && record.attemptId === null) {
+    throw new TypeError("Exercise evidence must reference a submitted attempt.");
+  }
+  if (
+    record.attemptId !== null
+    && (!attempt || attempt.studyId !== record.studyId || attempt.status !== "submitted")
+  ) {
+    throw new TypeError("Learning evidence must reference a submitted attempt in the same study.");
+  }
+
+  const updatedConcept = { ...concept };
+
+  if (record.createdAt >= concept.updatedAt) {
+    if (record.assessment === "demonstrated") {
+      updatedConcept.status = "mastered";
+      updatedConcept.updatedAt = record.createdAt;
+    } else if (record.assessment === "needs_practice") {
+      updatedConcept.status = concept.status === "mastered" ? "review" : "learning";
+      updatedConcept.updatedAt = record.createdAt;
+    } else if (concept.status === "not_started" || concept.status === "learning") {
+      updatedConcept.status = "learning";
+      updatedConcept.updatedAt = record.createdAt;
+    }
+  }
+
+  await repository.putMany([
+    { storeName: STORES.concepts, record: updatedConcept },
+    { storeName: STORES.learningEvidence, record },
+  ]);
   return record;
 }
 
@@ -130,11 +167,52 @@ export async function recordLearningSignal(repository, signalInput) {
       { storeName: STORES.concepts, record: concept },
       { storeName: STORES.learningSignals, record: signal },
     ]);
+  } else if (
+    (signal.kind === "difficulty" || signal.kind === "needs_verification")
+    && concept.status === "mastered"
+    && signal.createdAt >= concept.updatedAt
+  ) {
+    await repository.putMany([
+      {
+        storeName: STORES.concepts,
+        record: { ...concept, status: "review", updatedAt: signal.createdAt },
+      },
+      { storeName: STORES.learningSignals, record: signal },
+    ]);
   } else {
     await repository.add(STORES.learningSignals, signal);
   }
 
   return signal;
+}
+
+export function getEffectiveConceptStatus(concept, evidence, signals) {
+  const events = [
+    ...evidence
+      .filter((item) => item.conceptId === concept.id && item.createdAt >= concept.updatedAt)
+      .map((item) => ({ type: "evidence", createdAt: item.createdAt, assessment: item.assessment })),
+    ...signals
+      .filter((item) =>
+        item.conceptId === concept.id
+        && item.createdAt >= concept.updatedAt
+        && (item.kind === "difficulty" || item.kind === "needs_verification"),
+      )
+      .map((item) => ({ type: "signal", createdAt: item.createdAt, kind: item.kind })),
+  ];
+  events.sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+
+  return events.reduce((status, event) => {
+    if (event.type === "signal") {
+      return status === "mastered" ? "review" : status;
+    }
+    if (event.assessment === "demonstrated") {
+      return "mastered";
+    }
+    if (event.assessment === "needs_practice") {
+      return status === "mastered" || status === "review" ? "review" : "learning";
+    }
+    return status === "not_started" ? "learning" : status;
+  }, concept.status);
 }
 
 export async function getLearningMemory(repository, studyId) {
@@ -157,7 +235,7 @@ export async function getLearningMemory(repository, studyId) {
 
       return {
         name: concept.name,
-        status: concept.status,
+        status: getEffectiveConceptStatus(concept, evidence, signals),
         difficulties: [
           ...concept.difficulties,
           ...conceptSignals.filter((item) => item.kind === "difficulty").map((item) => item.details),

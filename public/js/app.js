@@ -7,7 +7,9 @@ import {
   createStudyProgress,
   createSubject,
 } from "./storage/models.mjs";
+import { getLearningMemory } from "./storage/learningData.mjs";
 import { updateStudyProgress } from "./storage/progress.mjs";
+import { recommendNextActivity } from "./storage/recommendations.mjs";
 
 const studyForm = document.querySelector("#study-form");
 
@@ -284,6 +286,13 @@ if (activeStudyPage) {
         const exerciseFormFeedback = document.querySelector("#exercise-form-feedback");
         const exerciseFeedback = document.querySelector("#exercise-feedback");
         const saveExerciseButton = document.querySelector("#save-exercise-button");
+        const recommendationSection = document.querySelector("#next-activity");
+        const recommendationTitle = document.querySelector("#next-activity-title");
+        const recommendationReason = document.querySelector("#next-activity-reason");
+        const recommendationAction = document.querySelector("#next-activity-action");
+        const conceptsSection = document.querySelector("#learning-concepts");
+        const conceptList = document.querySelector("#learning-concept-list");
+        let currentRecommendation = null;
         let editingStageId = null;
 
         function closeStageForm() {
@@ -314,6 +323,7 @@ if (activeStudyPage) {
           for (const [index, exercise] of exercises.entries()) {
             const card = document.createElement("article");
             card.className = "exercise-card";
+            card.dataset.exerciseId = exercise.id;
 
             const heading = document.createElement("h6");
             heading.textContent = `Exercício ${index + 1}`;
@@ -389,7 +399,7 @@ if (activeStudyPage) {
                   console.error("Tentativa salva, mas o ponteiro de progresso não foi atualizado.", error.name);
                 }
 
-                await renderExercises(stage);
+                await renderStudy();
                 exerciseFeedback.textContent = progressUpdated
                   ? "Resposta registrada. Ela permanece como tentativa e não conclui a etapa nem altera o domínio."
                   : "Resposta salva como tentativa, mas o progresso não pôde ser atualizado.";
@@ -427,6 +437,10 @@ if (activeStudyPage) {
           const progressPercent = stages.length > 0
             ? Math.round((completedCount / stages.length) * 100)
             : 0;
+          const [recommendation, memory] = await Promise.all([
+            recommendNextActivity(repository, studyId),
+            getLearningMemory(repository, studyId),
+          ]);
           const emptyState = document.querySelector("#study-empty-state");
 
           document.querySelector("#active-study-subject").textContent = `${subject.name} · ${study.topic}`;
@@ -447,6 +461,44 @@ if (activeStudyPage) {
           document.querySelector("#study-empty-title").textContent = "Estudo salvo";
           document.querySelector("#study-empty-message").textContent =
             "Adicione etapas e conteúdos para organizar este estudo. Seu progresso será salvo no navegador.";
+          currentRecommendation = recommendation;
+          recommendationSection.hidden = false;
+          recommendationTitle.textContent = recommendation.title;
+          recommendationReason.textContent = recommendation.reason;
+          const actionLabels = {
+            attempt_exercise: "Fazer exercício",
+            retry_exercise: "Tentar novamente",
+            review_attempt: "Ver tentativa",
+            start_stage: "Abrir etapa",
+            continue_stage: "Retomar etapa",
+            introduce_concept: "Ver conceito",
+            practice_concept: "Ver conceito",
+            review_concept: "Ver conceito",
+          };
+          recommendationAction.textContent = actionLabels[recommendation.type] || "";
+          recommendationAction.hidden = !actionLabels[recommendation.type];
+          conceptList.replaceChildren();
+          const conceptStatusLabels = {
+            not_started: "Não iniciado",
+            learning: "Em aprendizado",
+            mastered: "Dominado — evidência avaliada",
+            review: "Precisa revisar",
+          };
+          conceptsSection.hidden = memory.concepts.length === 0;
+
+          memory.concepts.forEach((concept) => {
+            const item = document.createElement("li");
+            item.dataset.conceptId = concept.id;
+            const name = document.createElement("strong");
+            name.textContent = concept.name;
+            const status = document.createElement("span");
+            status.textContent = conceptStatusLabels[concept.status] || "Estado não reconhecido";
+            const details = document.createElement("p");
+            details.textContent =
+              `${concept.evidence.length} evidência(s) registrada(s); ${concept.difficulties.length} dificuldade(s) registrada(s).`;
+            item.append(name, status, details);
+            conceptList.append(item);
+          });
           lessonContent.hidden = false;
           stageList.replaceChildren();
 
@@ -484,6 +536,50 @@ if (activeStudyPage) {
           }
           await renderExercises(currentStage);
         }
+
+        recommendationAction.addEventListener("click", async () => {
+          if (!currentRecommendation) {
+            return;
+          }
+
+          if (currentRecommendation.type === "start_stage" && currentRecommendation.stageId) {
+            try {
+              await updateStudyProgress(repository, studyId, {
+                currentStageId: currentRecommendation.stageId,
+              });
+              await renderStudy();
+            } catch (error) {
+              console.error("Falha ao abrir a etapa recomendada.", error.name);
+              exerciseFeedback.textContent = "Não foi possível abrir a etapa recomendada. Verifique o armazenamento e tente novamente.";
+            }
+            return;
+          }
+
+          if (currentRecommendation.exerciseId) {
+            const exerciseCard = [...exerciseList.querySelectorAll(".exercise-card")]
+              .find((item) => item.dataset.exerciseId === currentRecommendation.exerciseId);
+
+            if (exerciseCard) {
+              exerciseCard.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+            return;
+          }
+
+          if (currentRecommendation.conceptId) {
+            const conceptItem = [...conceptList.querySelectorAll("[data-concept-id]")]
+              .find((item) => item.dataset.conceptId === currentRecommendation.conceptId);
+
+            if (conceptItem) {
+              conceptItem.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+            return;
+          }
+
+          document.querySelector("#current-stage-content").scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        });
 
         document.querySelector("#add-stage-button").addEventListener("click", () => {
           closeStageForm();

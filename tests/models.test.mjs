@@ -53,6 +53,7 @@ test("records attempts and evidence without granting concept mastery automatical
   assert.equal(attempt.status, "submitted");
   assert.equal(concept.status, "not_started");
   assert.equal(evidence.attemptId, attempt.id);
+  assert.equal(evidence.assessment, "unassessed");
   assert.equal(progress.currentStageId, null);
   assert.deepEqual(progress.completedStageIds, []);
 });
@@ -82,5 +83,12 @@ test("rejects malformed learning data instead of silently normalizing it", () =>
     conceptId: "concept-1",
     type: "conversation",
     details: "Apenas declarou ter entendido.",
+  }), TypeError);
+  assert.throws(() => createLearningEvidence({
+    studyId: "study-1",
+    conceptId: "concept-1",
+    type: "exercise_response",
+    assessment: "self_reported_mastery",
+    details: "Autoavaliação não verificada.",
   }), TypeError);
 });
