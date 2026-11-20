@@ -84,10 +84,11 @@ export async function getConversationHistory(repository, channel, conversationId
     .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
 }
 
-export async function saveLearningEvidence(repository, evidence) {
-  const record = createLearningEvidence(evidence);
+async function persistLearningEvidence(repository, record, knownConcept) {
   const [concept, attempt] = await Promise.all([
-    repository.get(STORES.concepts, record.conceptId),
+    knownConcept
+      ? Promise.resolve(knownConcept)
+      : repository.get(STORES.concepts, record.conceptId),
     record.attemptId === null
       ? Promise.resolve(undefined)
       : repository.get(STORES.attempts, record.attemptId),
@@ -125,6 +126,82 @@ export async function saveLearningEvidence(repository, evidence) {
     { storeName: STORES.concepts, record: updatedConcept },
     { storeName: STORES.learningEvidence, record },
   ]);
+}
+
+export async function saveLearningEvidence(repository, evidence) {
+  const record = createLearningEvidence(evidence);
+  await persistLearningEvidence(repository, record);
+  return record;
+}
+
+export async function saveAttemptAssessment(repository, {
+  studyId,
+  attemptId,
+  conceptName,
+  assessment,
+  details,
+} = {}) {
+  if (
+    typeof studyId !== "string"
+    || !studyId.trim()
+    || studyId.trim().length > 80
+    || typeof attemptId !== "string"
+    || !attemptId.trim()
+    || attemptId.trim().length > 80
+    || typeof conceptName !== "string"
+    || !conceptName.trim()
+    || conceptName.trim().length > 120
+  ) {
+    throw new TypeError("A valid study, attempt, and concept name are required.");
+  }
+
+  const normalizedStudyId = studyId.trim();
+  const normalizedAttemptId = attemptId.trim();
+  const normalizedConceptName = conceptName.trim();
+  const [attempt, exercises, concepts, priorEvidence] = await Promise.all([
+    repository.get(STORES.attempts, normalizedAttemptId),
+    repository.getAllByIndex(STORES.exercises, "studyId", normalizedStudyId),
+    repository.getAllByIndex(STORES.concepts, "studyId", normalizedStudyId),
+    repository.getAllByIndex(STORES.learningEvidence, "attemptId", normalizedAttemptId),
+  ]);
+  const exercise = attempt
+    ? exercises.find((item) => item.id === attempt.exerciseId)
+    : undefined;
+
+  if (
+    !attempt
+    || attempt.studyId !== normalizedStudyId
+    || attempt.status !== "submitted"
+    || !exercise
+    || exercise.studyId !== normalizedStudyId
+    || exercise.stageId !== attempt.stageId
+  ) {
+    throw new TypeError("The submitted attempt must reference an exercise in the same study.");
+  }
+
+  const conceptKey = normalizedConceptName.toLocaleLowerCase("pt-BR");
+  const concept = concepts.find((item) => item.nameKey === conceptKey)
+    || createConcept({ studyId: normalizedStudyId, name: normalizedConceptName });
+  const latestEvidenceTimestamp = priorEvidence
+    .filter((item) => item.conceptId === concept.id)
+    .reduce((latest, item) => Math.max(latest, Date.parse(item.createdAt)), 0);
+  const conceptTimestamp = Date.parse(concept.updatedAt);
+  const now = new Date(Math.max(
+    Date.now(),
+    Number.isFinite(conceptTimestamp) ? conceptTimestamp + 1 : 0,
+    latestEvidenceTimestamp + 1,
+  ));
+  const record = createLearningEvidence({
+    studyId: normalizedStudyId,
+    conceptId: concept.id,
+    attemptId: normalizedAttemptId,
+    type: "exercise_response",
+    assessment,
+    details,
+    now,
+  });
+
+  await persistLearningEvidence(repository, record, concept);
   return record;
 }
 

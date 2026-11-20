@@ -2214,7 +2214,8 @@ a {
 }
 
 .study-page #exercise-feedback,
-.study-page #exercise-form-feedback {
+.study-page #exercise-form-feedback,
+.study-page .assessment-form .form-feedback {
   margin: 8px 0 0;
   color: var(--muted);
   font-size: 10px;
@@ -2275,22 +2276,71 @@ a {
   font-size: 9px;
 }
 
+.study-page .attempt-answer {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.study-page .attempt-assessment-status {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.study-page .assessment-history {
+  display: grid;
+  gap: 5px;
+  margin: 8px 0 0;
+  padding-left: 16px;
+}
+
+.study-page .assessment-history li {
+  padding: 7px;
+  background: #fff;
+}
+
+.study-page .assessment-history p {
+  margin: 3px 0 0;
+  white-space: pre-wrap;
+}
+
+.study-page .attempt-assessment {
+  margin-top: 8px;
+  border-top: 1px solid #e8ebf3;
+}
+
+.study-page .attempt-assessment summary {
+  width: fit-content;
+  padding: 8px 0 0;
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
 .study-page .attempt-form,
-.study-page .exercise-form {
+.study-page .exercise-form,
+.study-page .assessment-form {
   display: grid;
   gap: 8px;
   margin-top: 11px;
 }
 
 .study-page .attempt-form label,
-.study-page .exercise-form label {
+.study-page .exercise-form label,
+.study-page .assessment-form label {
   color: var(--ink);
   font-size: 10px;
   font-weight: 650;
 }
 
 .study-page .attempt-form textarea,
-.study-page .exercise-form textarea {
+.study-page .exercise-form textarea,
+.study-page .assessment-form input,
+.study-page .assessment-form select,
+.study-page .assessment-form textarea {
   width: 100%;
   min-height: 56px;
   resize: vertical;
@@ -2305,13 +2355,30 @@ a {
   line-height: 1.5;
 }
 
+.study-page .assessment-form input,
+.study-page .assessment-form select {
+  min-height: 38px;
+  resize: none;
+}
+
 .study-page .attempt-form textarea:focus,
-.study-page .exercise-form textarea:focus {
+.study-page .exercise-form textarea:focus,
+.study-page .assessment-form input:focus,
+.study-page .assessment-form select:focus,
+.study-page .assessment-form textarea:focus {
   border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(66, 101, 232, 0.12);
 }
 
-.study-page .attempt-form button {
+.study-page .assessment-guidance {
+  margin: 0;
+  color: var(--soft-muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.study-page .attempt-form button,
+.study-page .assessment-form button {
   justify-self: end;
 }
 

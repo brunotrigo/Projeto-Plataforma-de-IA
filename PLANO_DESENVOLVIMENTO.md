@@ -318,7 +318,7 @@ O desenvolvimento deve seguir estas regras:
 - **Critérios de conclusão:** compreensão declarada ou explicação apresentada não altera automaticamente um conceito para dominado.
 - **Testes e verificações:** testes negativos para declarações de compreensão e testes positivos com evidências registradas.
 - **Estado:** Concluída.
-- **Evidência:** estados dos conceitos são atualizados por evidências explicitamente avaliadas: somente `demonstrated` concede domínio; `needs_practice` mantém aprendizado ou solicita revisão; evidências não avaliadas e declarações de compreensão não concedem domínio. Evidências de exercícios precisam referenciar tentativas enviadas do mesmo estudo. Testes confirmam que domínio não altera conclusão de etapas e que dificuldades após domínio solicitam revisão. Dados legados têm o estado efetivo derivado dos registros sem presumir domínio. O resultado da avaliação é uma entrada explícita do serviço; não há correção automática ou interface de avaliação nesta tarefa, enquanto a integração com IA da F5.3 permanece bloqueada. `npm.cmd test` passou (30 testes), e a verificação no navegador confirmou estado e recomendação coerentes sem alterar progresso.
+- **Evidência:** a interface permite avaliar uma tentativa ligada ao exercício e conceito, registrar `demonstrated`, `needs_practice` ou `unassessed` com justificativa e preservar o histórico de avaliações. Somente `demonstrated` concede domínio; uma tentativa sem avaliação e declarações de compreensão não concedem domínio. Evidências referenciam tentativas enviadas do mesmo estudo e exercício. Testes confirmam estados, histórico, recomendação e separação entre domínio e conclusão da etapa. `npm.cmd test` passou (33 testes); no navegador, as três avaliações foram exercitadas, a recomendação mudou conforme o resultado e a etapa permaneceu em 0% concluído. Não há correção automática por IA; F5.3 permanece bloqueada.
 
 ### F5.5 — Recomendar continuação
 
@@ -327,7 +327,7 @@ O desenvolvimento deve seguir estas regras:
 - **Critérios de conclusão:** a recomendação preserva informações reais e não presume conhecimento não evidenciado.
 - **Testes e verificações:** cenários com conceitos dominados, em aprendizado e não iniciados.
 - **Estado:** Concluída.
-- **Evidência:** recomendação determinística considera etapa atual e concluída, exercícios, tentativas e avaliações, estados efetivos dos conceitos e dificuldades. Tentativas sem avaliação solicitam revisão da resposta; avaliações que indicam prática recomendam nova tentativa; conceitos não iniciados não são tratados como dominados; a próxima etapa só é sugerida quando a anterior consta como concluída. Testes cobrem esses cenários, inclusive evidência legada não avaliada; `npm.cmd test` passou (30 testes). Verificação no navegador confirmou que recomendação e estado do conceito não avançam o progresso.
+- **Evidência:** recomendação determinística considera etapa atual e concluída, exercícios, tentativas e avaliações, estados efetivos dos conceitos e dificuldades. Tentativas sem avaliação solicitam revisão; `needs_practice` recomenda nova tentativa; `demonstrated` permite continuar sem concluir a etapa. Conceitos não iniciados não são tratados como dominados e a próxima etapa só é sugerida quando a anterior consta como concluída. Testes cobrem esses cenários, inclusive evidência legada não avaliada; `npm.cmd test` passou (33 testes). Verificação no navegador confirmou que as avaliações atualizam recomendação e estado sem avançar o progresso.
 
 ---
 
@@ -554,7 +554,7 @@ O desenvolvimento deve seguir estas regras:
 | Fase 2 — Interface e experiência do usuário | Concluída | fluxos visuais da HOME, estudo e consultas revisados; persistência durável permanece na Fase 4. |
 | Fase 3 — Backend e API | Concluída | contratos, validação, quatro rotas stateless e tratamento seguro de erros cobertos por testes com serviço de IA simulado. O provedor real permanece pendente da Fase 6. |
 | Fase 4 — Persistência e organização dos dados | Concluída | IndexedDB versionado, retomada, progresso, históricos isolados e memória estruturada implementados e verificados. |
-| Fase 5 — Sistema de aprendizagem | Bloqueada | F5.1 e F5.2 concluídas; F5.3 aguarda uma opção de IA compatível com custo e público-alvo aprovados. |
+| Fase 5 — Sistema de aprendizagem | Bloqueada | F5.1, F5.2, F5.4 e F5.5 concluídas; F5.3 permanece bloqueada até decisão sobre uma opção de IA compatível com custo e público-alvo aprovados. |
 | Fase 6 — Inteligência artificial | Aguardando aprovação | comparação apresentada; orçamento atual é US$ 0 e o público-alvo ainda não foi definido. |
 | Fase 7 — Consultas independentes | Não iniciada | não altera estado do estudo. |
 | Fase 8 — Personalização com IA | Não iniciada | fora do MVP. |

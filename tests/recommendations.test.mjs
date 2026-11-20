@@ -9,6 +9,7 @@ import {
   createStudy,
   createStudyProgress,
 } from "../public/js/storage/models.mjs";
+import { saveAttemptAssessment } from "../public/js/storage/learningData.mjs";
 import { recommendNextActivity } from "../public/js/storage/recommendations.mjs";
 
 function createRepository() {
@@ -24,6 +25,11 @@ function createRepository() {
     async getAllByIndex(storeName, indexName, value) {
       return [...stores.get(storeName).values()]
         .filter((record) => record[indexName] === value);
+    },
+    async putMany(entries) {
+      entries.forEach((entry) => stores
+        .get(entry.storeName)
+        .set(entry.record.id || entry.record.studyId, entry.record));
     },
   };
 }
@@ -93,6 +99,69 @@ test("does not assume an unassessed attempt is correct or mastered", async () =>
   assert.equal(recommendation.type, "review_attempt");
   assert.equal(recommendation.attemptId, attempt.id);
   assert.match(recommendation.reason, /não é possível presumir acerto/);
+});
+
+test("refreshes recommendations after each explicit assessment without completing the stage", async () => {
+  const fixture = await createStudyFixture();
+  const exercise = createExercise({
+    studyId: fixture.study.id,
+    stageId: fixture.firstStage.id,
+    prompt: "Declare uma variável.",
+  });
+  const attempt = createAttempt({
+    studyId: fixture.study.id,
+    stageId: fixture.firstStage.id,
+    exerciseId: exercise.id,
+    answer: "const total = 1;",
+  });
+  await fixture.repository.add(STORES.exercises, exercise);
+  await fixture.repository.add(STORES.attempts, attempt);
+
+  const pending = await recommendNextActivity(fixture.repository, fixture.study.id);
+  assert.equal(pending.type, "review_attempt");
+
+  await saveAttemptAssessment(fixture.repository, {
+    studyId: fixture.study.id,
+    attemptId: attempt.id,
+    conceptName: "Variáveis",
+    assessment: "unassessed",
+    details: "Resposta ainda sem análise.",
+  });
+  const stillPending = await recommendNextActivity(fixture.repository, fixture.study.id);
+  assert.equal(stillPending.type, "review_attempt");
+  assert.match(stillPending.reason, /avaliação registrada mantém a tentativa sem resultado/);
+
+  await saveAttemptAssessment(fixture.repository, {
+    studyId: fixture.study.id,
+    attemptId: attempt.id,
+    conceptName: "Variáveis",
+    assessment: "demonstrated",
+    details: "Aplicou corretamente o conceito.",
+  });
+  assert.equal(
+    (await recommendNextActivity(fixture.repository, fixture.study.id)).type,
+    "continue_stage",
+  );
+  const concept = (await fixture.repository.getAllByIndex(
+    STORES.concepts,
+    "studyId",
+    fixture.study.id,
+  ))[0];
+  assert.equal(concept.status, "mastered");
+
+  await saveAttemptAssessment(fixture.repository, {
+    studyId: fixture.study.id,
+    attemptId: attempt.id,
+    conceptName: "Variáveis",
+    assessment: "needs_practice",
+    details: "Ainda precisa praticar.",
+  });
+  const retry = await recommendNextActivity(fixture.repository, fixture.study.id);
+
+  assert.equal(retry.type, "retry_exercise");
+  assert.equal(retry.title, "Tente novamente este exercício");
+  assert.equal(retry.exerciseId, exercise.id);
+  assert.deepEqual(fixture.progress.completedStageIds, []);
 });
 
 test("recommends retrying an exercise with an assessed need for practice", async () => {

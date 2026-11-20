@@ -7,7 +7,7 @@ import {
   createStudyProgress,
   createSubject,
 } from "./storage/models.mjs";
-import { getLearningMemory } from "./storage/learningData.mjs";
+import { getLearningMemory, saveAttemptAssessment } from "./storage/learningData.mjs";
 import { updateStudyProgress } from "./storage/progress.mjs";
 import { recommendNextActivity } from "./storage/recommendations.mjs";
 
@@ -310,7 +310,11 @@ if (activeStudyPage) {
             return;
           }
 
-          const exercises = await repository.getAllByIndex(STORES.exercises, "stageId", stage.id);
+          const [exercises, concepts, evidence] = await Promise.all([
+            repository.getAllByIndex(STORES.exercises, "stageId", stage.id),
+            repository.getAllByIndex(STORES.concepts, "studyId", studyId),
+            repository.getAllByIndex(STORES.learningEvidence, "studyId", studyId),
+          ]);
           exercises.sort((left, right) => left.createdAt.localeCompare(right.createdAt));
 
           if (exercises.length === 0) {
@@ -346,9 +350,167 @@ if (activeStudyPage) {
 
             attempts.forEach((attempt, attemptIndex) => {
               const item = document.createElement("li");
+              item.dataset.attemptId = attempt.id;
               const label = document.createElement("strong");
               label.textContent = `Tentativa ${attemptIndex + 1} · ${new Date(attempt.createdAt).toLocaleString("pt-BR")}`;
-              item.append(label, document.createTextNode(attempt.answer));
+              const answer = document.createElement("p");
+              answer.className = "attempt-answer";
+              answer.textContent = attempt.answer;
+
+              const attemptEvidence = evidence
+                .filter((record) => record.attemptId === attempt.id)
+                .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+              const latestAssessment = attemptEvidence[attemptEvidence.length - 1];
+              const assessmentLabels = {
+                unassessed: "Ainda não avaliada",
+                demonstrated: "Domínio demonstrado",
+                needs_practice: "Precisa praticar",
+              };
+              const assessmentStatus = document.createElement("span");
+              assessmentStatus.className = "attempt-assessment-status";
+              assessmentStatus.textContent = latestAssessment
+                ? `Avaliação mais recente: ${assessmentLabels[latestAssessment.assessment] || "Resultado não reconhecido"}`
+                : "Ainda não avaliada";
+              item.append(label, answer, assessmentStatus);
+
+              if (attemptEvidence.length > 0) {
+                const assessmentHistory = document.createElement("ol");
+                assessmentHistory.className = "assessment-history";
+                attemptEvidence.forEach((record, evidenceIndex) => {
+                  const historyItem = document.createElement("li");
+                  const historyTitle = document.createElement("strong");
+                  const concept = concepts.find((entry) => entry.id === record.conceptId);
+                  historyTitle.textContent =
+                    `Avaliação ${evidenceIndex + 1} · ${assessmentLabels[record.assessment] || "Resultado não reconhecido"}`
+                    + ` · ${concept ? concept.name : "Conceito indisponível"}`
+                    + ` · ${new Date(record.createdAt).toLocaleString("pt-BR")}`;
+                  const historyDetails = document.createElement("p");
+                  historyDetails.textContent = record.details;
+                  historyItem.append(historyTitle, historyDetails);
+                  assessmentHistory.append(historyItem);
+                });
+                item.append(assessmentHistory);
+              }
+
+              const assessmentDisclosure = document.createElement("details");
+              assessmentDisclosure.className = "attempt-assessment";
+              const assessmentSummary = document.createElement("summary");
+              assessmentSummary.textContent = attemptEvidence.length > 0
+                ? "Registrar nova avaliação"
+                : "Avaliar tentativa";
+
+              const assessmentForm = document.createElement("form");
+              assessmentForm.className = "assessment-form";
+              const conceptLabel = document.createElement("label");
+              const conceptInputId = `assessment-concept-${attempt.id}`;
+              const conceptListId = `assessment-concepts-${attempt.id}`;
+              conceptLabel.htmlFor = conceptInputId;
+              conceptLabel.textContent = "Conceito relacionado";
+              const conceptInput = document.createElement("input");
+              conceptInput.id = conceptInputId;
+              conceptInput.name = "concept-name";
+              conceptInput.type = "text";
+              conceptInput.maxLength = 120;
+              conceptInput.required = true;
+              conceptInput.setAttribute("list", conceptListId);
+              const priorConcept = latestAssessment
+                ? concepts.find((entry) => entry.id === latestAssessment.conceptId)
+                : undefined;
+              conceptInput.value = priorConcept ? priorConcept.name : "";
+              const conceptList = document.createElement("datalist");
+              conceptList.id = conceptListId;
+              concepts.forEach((concept) => {
+                const option = document.createElement("option");
+                option.value = concept.name;
+                conceptList.append(option);
+              });
+
+              const assessmentLabel = document.createElement("label");
+              const assessmentSelectId = `assessment-result-${attempt.id}`;
+              assessmentLabel.htmlFor = assessmentSelectId;
+              assessmentLabel.textContent = "Resultado da avaliação";
+              const assessmentSelect = document.createElement("select");
+              assessmentSelect.id = assessmentSelectId;
+              assessmentSelect.name = "assessment";
+              assessmentSelect.required = true;
+              const assessmentOptions = [
+                ["", "Selecione um resultado"],
+                ["demonstrated", "Demonstrou domínio"],
+                ["needs_practice", "Precisa praticar"],
+                ["unassessed", "Ainda não avaliada"],
+              ];
+              assessmentOptions.forEach(([value, text]) => {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = text;
+                assessmentSelect.append(option);
+              });
+
+              const detailsLabel = document.createElement("label");
+              const detailsId = `assessment-details-${attempt.id}`;
+              detailsLabel.htmlFor = detailsId;
+              detailsLabel.textContent = "Feedback ou justificativa";
+              const detailsInput = document.createElement("textarea");
+              detailsInput.id = detailsId;
+              detailsInput.name = "assessment-details";
+              detailsInput.maxLength = 2000;
+              detailsInput.rows = 3;
+              detailsInput.required = true;
+
+              const assessmentGuidance = document.createElement("p");
+              assessmentGuidance.className = "assessment-guidance";
+              assessmentGuidance.textContent =
+                "A avaliação é registrada explicitamente; uma tentativa sem avaliação não é considerada correta.";
+              const assessmentFeedback = document.createElement("p");
+              assessmentFeedback.className = "form-feedback";
+              assessmentFeedback.setAttribute("role", "status");
+              assessmentFeedback.setAttribute("aria-live", "polite");
+              const saveAssessmentButton = document.createElement("button");
+              saveAssessmentButton.className = "secondary-button";
+              saveAssessmentButton.type = "submit";
+              saveAssessmentButton.textContent = "Salvar avaliação";
+
+              assessmentForm.append(
+                conceptLabel,
+                conceptInput,
+                conceptList,
+                assessmentLabel,
+                assessmentSelect,
+                detailsLabel,
+                detailsInput,
+                assessmentGuidance,
+                assessmentFeedback,
+                saveAssessmentButton,
+              );
+              assessmentForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                saveAssessmentButton.disabled = true;
+                assessmentFeedback.textContent = "Salvando avaliação...";
+                let evidenceSaved = false;
+
+                try {
+                  await saveAttemptAssessment(repository, {
+                    studyId,
+                    attemptId: attempt.id,
+                    conceptName: conceptInput.value,
+                    assessment: assessmentSelect.value,
+                    details: detailsInput.value,
+                  });
+                  evidenceSaved = true;
+                  await renderStudy();
+                  exerciseFeedback.textContent =
+                    "Avaliação registrada no histórico. A recomendação foi atualizada; a etapa não foi concluída.";
+                } catch (error) {
+                  console.error("Falha ao registrar avaliação da tentativa.", error.name);
+                  assessmentFeedback.textContent = evidenceSaved
+                    ? "A avaliação foi salva, mas a tela não pôde ser atualizada. Recarregue o estudo para confirmar."
+                    : "Não foi possível salvar a avaliação. Verifique os dados e o armazenamento e tente novamente.";
+                } finally {
+                  saveAssessmentButton.disabled = false;
+                }
+              });
+              assessmentDisclosure.append(assessmentSummary, assessmentForm);
+              item.append(assessmentDisclosure);
               attemptHistory.append(item);
             });
 

@@ -5,11 +5,16 @@ import {
   getConversationHistory,
   getLearningMemory,
   recordLearningSignal,
+  saveAttemptAssessment,
   saveConversationMessage,
   saveLearningEvidence,
 } from "../public/js/storage/learningData.mjs";
 import { STORES } from "../public/js/storage/database.mjs";
-import { createAttempt, createStudyProgress } from "../public/js/storage/models.mjs";
+import {
+  createAttempt,
+  createExercise,
+  createStudyProgress,
+} from "../public/js/storage/models.mjs";
 
 function createMemoryRepository() {
   const stores = new Map(Object.values(STORES).map((name) => [name, new Map()]));
@@ -260,6 +265,104 @@ test("requires explicitly assessed evidence for mastery and revisits mastery aft
   });
 
   assert.equal((await getLearningMemory(repository, "study-1")).concepts[0].status, "review");
+});
+
+test("records explicit attempt assessments as history without completing the stage", async () => {
+  const repository = createMemoryRepository();
+  const exercise = createExercise({
+    studyId: "study-1",
+    stageId: "stage-1",
+    prompt: "Declare uma variável.",
+  });
+  const attempt = createAttempt({
+    studyId: "study-1",
+    stageId: "stage-1",
+    exerciseId: exercise.id,
+    answer: "const total = 1;",
+  });
+  const progress = createStudyProgress({
+    studyId: "study-1",
+    currentStageId: "stage-1",
+  });
+  await repository.add(STORES.exercises, exercise);
+  await repository.add(STORES.attempts, attempt);
+  await repository.add(STORES.studyProgress, progress);
+
+  const unassessed = await saveAttemptAssessment(repository, {
+    studyId: "study-1",
+    attemptId: attempt.id,
+    conceptName: "Variáveis",
+    assessment: "unassessed",
+    details: "Resposta registrada, ainda sem análise.",
+  });
+  assert.equal((await getLearningMemory(repository, "study-1")).concepts[0].status, "learning");
+
+  const demonstrated = await saveAttemptAssessment(repository, {
+    studyId: "study-1",
+    attemptId: attempt.id,
+    conceptName: "variáveis",
+    assessment: "demonstrated",
+    details: "A resposta aplicou corretamente o conceito.",
+  });
+  assert.equal((await getLearningMemory(repository, "study-1")).concepts[0].status, "mastered");
+
+  const needsPractice = await saveAttemptAssessment(repository, {
+    studyId: "study-1",
+    attemptId: attempt.id,
+    conceptName: "Variáveis",
+    assessment: "needs_practice",
+    details: "Ainda há confusão sobre o escopo.",
+  });
+  const memory = await getLearningMemory(repository, "study-1");
+  const evidenceHistory = await repository.getAllByIndex(
+    STORES.learningEvidence,
+    "attemptId",
+    attempt.id,
+  );
+  const unchangedProgress = await repository.get(STORES.studyProgress, "study-1");
+
+  assert.equal(memory.concepts.length, 1);
+  assert.equal(memory.concepts[0].status, "review");
+  assert.deepEqual(
+    [unassessed.assessment, demonstrated.assessment, needsPractice.assessment],
+    ["unassessed", "demonstrated", "needs_practice"],
+  );
+  assert.equal(evidenceHistory.length, 3);
+  assert.ok(evidenceHistory[0].createdAt < evidenceHistory[1].createdAt);
+  assert.ok(evidenceHistory[1].createdAt < evidenceHistory[2].createdAt);
+  assert.equal(unchangedProgress.currentStageId, "stage-1");
+  assert.deepEqual(unchangedProgress.completedStageIds, []);
+  assert.equal((await repository.get(STORES.attempts, attempt.id)).answer, "const total = 1;");
+});
+
+test("rejects assessments for attempts not linked to the study exercise", async () => {
+  const repository = createMemoryRepository();
+  const exercise = createExercise({
+    studyId: "study-1",
+    stageId: "stage-1",
+    prompt: "Declare uma variável.",
+  });
+  const attempt = createAttempt({
+    studyId: "study-1",
+    stageId: "stage-2",
+    exerciseId: exercise.id,
+    answer: "const total = 1;",
+  });
+  await repository.add(STORES.exercises, exercise);
+  await repository.add(STORES.attempts, attempt);
+
+  await assert.rejects(
+    saveAttemptAssessment(repository, {
+      studyId: "study-1",
+      attemptId: attempt.id,
+      conceptName: "Variáveis",
+      assessment: "demonstrated",
+      details: "Tentativa não corresponde à etapa do exercício.",
+    }),
+    TypeError,
+  );
+  assert.equal((await repository.getAllByIndex(STORES.concepts, "studyId", "study-1")).length, 0);
+  assert.equal((await repository.getAllByIndex(STORES.learningEvidence, "studyId", "study-1")).length, 0);
 });
 
 test("does not promote a concept from an unassessed response", async () => {

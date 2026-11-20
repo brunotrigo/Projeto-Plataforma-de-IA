@@ -43,7 +43,7 @@ function recommendConcept(concept, evidence, attempts, signals) {
     if (exerciseEvidence && exerciseEvidence.assessment === "needs_practice") {
       return createRecommendation(
         "retry_exercise",
-        `Tente novamente: ${attempt.exerciseId}`,
+        "Tente novamente este exercício",
         `A resposta vinculada a “${concept.name}” foi avaliada como necessitando de prática.`,
         { conceptId: concept.id, exerciseId: attempt.exerciseId, stageId: attempt.stageId },
       );
@@ -152,11 +152,20 @@ export async function recommendNextActivity(repository, studyId) {
         .filter((item) => item.attemptId === latestAttempt.id)
         .sort(byNewest)[0];
 
-      if (!latestAssessment || latestAssessment.assessment === "unassessed") {
+      if (!latestAssessment) {
         return createRecommendation(
           "review_attempt",
           "Revise a resposta registrada",
           "A tentativa ainda não tem uma avaliação registrada; não é possível presumir acerto, conclusão ou domínio.",
+          { attemptId: latestAttempt.id, exerciseId: exercise.id, stageId: currentStage.id },
+        );
+      }
+
+      if (latestAssessment.assessment === "unassessed") {
+        return createRecommendation(
+          "review_attempt",
+          "Revise a resposta registrada",
+          "A avaliação registrada mantém a tentativa sem resultado; não é possível presumir acerto, conclusão ou domínio.",
           { attemptId: latestAttempt.id, exerciseId: exercise.id, stageId: currentStage.id },
         );
       }
