@@ -31,6 +31,8 @@
       </div>
     </header>
 
+    <p class="storage-feedback page-shell" id="study-storage-feedback" role="alert" hidden></p>
+
     <main class="area-main page-shell study-main">
       <section class="study-page-heading" aria-labelledby="page-title">
         <div>
@@ -38,7 +40,7 @@
           <h1 id="page-title">Estudo principal</h1>
           <p class="study-page-description">Seu espaço para aprender uma etapa de cada vez.</p>
         </div>
-        <a class="study-back-link" href="/index.html">
+        <a class="study-back-link" id="study-back-link" href="/index.html">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M16 10H4m5 5-5-5 5-5" />
           </svg>
@@ -56,7 +58,7 @@
           </span>
           <div>
             <p class="study-overline">ASSUNTO ATUAL</p>
-            <h2>Nenhum estudo selecionado</h2>
+            <h2 id="active-study-subject">Nenhum estudo selecionado</h2>
           </div>
         </div>
 
@@ -64,14 +66,14 @@
           <span class="step-indicator" aria-hidden="true">—</span>
           <div>
             <p class="study-overline">ETAPA ATUAL</p>
-            <p class="overview-value">Aguardando início</p>
+            <p class="overview-value" id="active-study-status">Aguardando início</p>
           </div>
         </div>
 
         <div class="study-overview-progress">
           <div class="progress-label">
             <span class="study-overline">PROGRESSO DO ESTUDO</span>
-            <span class="progress-pending">Será exibido ao iniciar</span>
+            <span class="progress-pending" id="active-study-progress">Será exibido ao iniciar</span>
           </div>
           <div class="progress-track" aria-hidden="true">
             <span></span>
@@ -113,19 +115,61 @@
               </span>
               <div class="chat-message-content">
                 <span class="message-author">Chat Principal</span>
-                <p>Quando você iniciar um estudo, vou conduzir sua aprendizagem com explicações, exemplos e exercícios, oferecendo dicas e feedback ao longo das etapas.</p>
+                <p id="main-chat-intro">Quando você iniciar um estudo, vou conduzir sua aprendizagem com explicações, exemplos e exercícios, oferecendo dicas e feedback ao longo das etapas.</p>
               </div>
             </div>
 
-            <div class="study-chat-empty-state">
+            <section class="lesson-content" id="lesson-content" aria-labelledby="lesson-content-title" hidden>
+              <div class="lesson-stage-heading">
+                <h3 id="lesson-content-title">Etapas do estudo</h3>
+                <button class="secondary-button" id="add-stage-button" type="button">Adicionar etapa</button>
+              </div>
+              <ol class="lesson-stage-list" id="lesson-stage-list"></ol>
+              <article class="lesson-stage-current" id="current-stage-content" hidden>
+                <p class="card-kicker">ETAPA ATUAL</p>
+                <h4 id="current-stage-title"></h4>
+                <p id="current-stage-text"></p>
+                <button class="secondary-button" id="edit-stage-button" type="button">Editar etapa atual</button>
+                <section class="stage-exercises" id="stage-exercises" aria-labelledby="stage-exercises-title">
+                  <div class="exercise-section-heading">
+                    <h5 id="stage-exercises-title">Exercícios desta etapa</h5>
+                    <button class="secondary-button" id="add-exercise-button" type="button">Adicionar exercício</button>
+                  </div>
+                  <p class="form-feedback" id="exercise-feedback" role="status" aria-live="polite"></p>
+                  <div class="exercise-list" id="exercise-list"></div>
+                  <form class="exercise-form" id="exercise-form" hidden>
+                    <label for="exercise-prompt-input">Enunciado do exercício</label>
+                    <textarea id="exercise-prompt-input" name="exercise-prompt" rows="3" maxlength="4000" required></textarea>
+                    <p class="form-feedback" id="exercise-form-feedback" role="status" aria-live="polite"></p>
+                    <div class="lesson-stage-actions">
+                      <button class="secondary-button" id="cancel-exercise-button" type="button">Cancelar</button>
+                      <button class="primary-button" id="save-exercise-button" type="submit">Salvar exercício</button>
+                    </div>
+                  </form>
+                </section>
+              </article>
+              <form class="lesson-stage-form" id="stage-form" hidden>
+                <label for="stage-title-input">Nome da etapa</label>
+                <input id="stage-title-input" name="stage-title" type="text" maxlength="120" required>
+                <label for="stage-content-input">Conteúdo</label>
+                <textarea id="stage-content-input" name="stage-content" rows="5"></textarea>
+                <p class="form-feedback" id="stage-feedback" role="status" aria-live="polite"></p>
+                <div class="lesson-stage-actions">
+                  <button class="secondary-button" id="cancel-stage-button" type="button">Cancelar</button>
+                  <button class="primary-button" id="save-stage-button" type="submit">Salvar etapa</button>
+                </div>
+              </form>
+            </section>
+
+            <div class="study-chat-empty-state" id="study-empty-state">
               <span class="study-empty-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12Z" />
                   <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7m-7 4h7" />
                 </svg>
               </span>
-              <h3>Nenhum estudo selecionado</h3>
-              <p>Escolha um assunto na Home para começar. O conteúdo da aula e as atividades aparecerão nesta conversa.</p>
+              <h3 id="study-empty-title">Nenhum estudo selecionado</h3>
+              <p id="study-empty-message">Escolha um assunto na Home para começar. O conteúdo da aula e as atividades aparecerão nesta conversa.</p>
               <a class="study-empty-link" href="/index.html">
                 Escolher assunto na Home
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -211,5 +255,6 @@
       <span class="footer-brand">Plataforma de Estudos <span>com IA</span></span>
       <span>Feita para acompanhar sua jornada de aprendizado.</span>
     </footer>
+    <script type="module" src="/js/app.js"></script>
   </body>
 </html>

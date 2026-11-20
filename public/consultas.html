@@ -66,6 +66,20 @@
           <p>
             Consulte termos técnicos, palavras em inglês, funções, métodos, conceitos ou trechos de código. Veja significados, contexto e exemplos.
           </p>
+          <section class="consultation-history" aria-label="Histórico da consulta técnica" aria-live="polite">
+            <div class="consultation-message">
+              <span>Consulta técnica</span>
+              <p>Quando a integração com IA estiver disponível, você poderá consultar um termo ou trecho de código sem alterar seu estudo.</p>
+            </div>
+          </section>
+          <form class="consultation-composer">
+            <label class="visually-hidden" for="technical-query">Termo ou trecho de código</label>
+            <textarea id="technical-query" name="technical-query" rows="3" placeholder="Digite um termo ou trecho de código..."></textarea>
+            <div class="consultation-composer-footer">
+              <span>O envio ficará disponível quando a IA for integrada.</span>
+              <button type="button" aria-label="Enviar consulta técnica" disabled>Enviar</button>
+            </div>
+          </form>
         </article>
 
         <article class="consultation-card">
@@ -80,6 +94,20 @@
           <p>
             Faça perguntas sobre qualquer assunto que gere dúvida, em uma conversa independente do estudo principal.
           </p>
+          <section class="consultation-history" aria-label="Histórico das perguntas livres" aria-live="polite">
+            <div class="consultation-message">
+              <span>Perguntas livres</span>
+              <p>Esta conversa terá um histórico próprio e não modificará etapas, exercícios ou progresso da aula.</p>
+            </div>
+          </section>
+          <form class="consultation-composer">
+            <label class="visually-hidden" for="free-query">Sua pergunta</label>
+            <textarea id="free-query" name="free-query" rows="3" placeholder="Escreva sua pergunta..."></textarea>
+            <div class="consultation-composer-footer">
+              <span>O envio ficará disponível quando a IA for integrada.</span>
+              <button type="button" aria-label="Enviar pergunta livre" disabled>Enviar</button>
+            </div>
+          </form>
         </article>
       </section>
     </main>

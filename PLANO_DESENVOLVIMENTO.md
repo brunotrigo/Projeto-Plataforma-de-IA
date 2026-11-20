@@ -7,8 +7,9 @@ Este documento organiza o desenvolvimento da Plataforma de Estudos com IA com ba
 O desenvolvimento deve seguir estas regras:
 
 - Implementar uma funcionalidade por vez.
-- Executar uma tarefa pequena e aguardar aprovação antes da próxima.
+- Executar as tarefas em sequência e avançar automaticamente quando cada uma estiver implementada e validada.
 - Preservar as decisões aprovadas e não alterar tecnologias ou escopo sem autorização.
+- Consultar o responsável somente para decisões importantes ainda não definidas, como provedor de IA, serviços com custo, dependências relevantes, mudanças arquiteturais, migrações destrutivas ou publicação.
 - Não marcar uma tarefa como concluída sem evidências verificáveis.
 - Evitar resultados fictícios, testes não executados ou conclusões sem demonstração.
 
@@ -48,7 +49,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** nenhuma.
 - **Critérios de conclusão:** inventário inicial criado com a localização das principais áreas do projeto e suas responsabilidades.
 - **Testes e verificações:** execução de inspeção do repositório e leitura do `package.json`, README e arquivos existentes.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** frontend em `public/` (HOME, estudo, consultas, CSS e JavaScript); backend em `src/` (Express, servidor e rota estática); dependência Express; testes sem implementação; `.github/` com instruções do projeto.
 
 ### F0.2 — Mapear o comportamento implementado
 
@@ -56,7 +58,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F0.1.
 - **Critérios de conclusão:** lista objetiva de lacunas do MVP, sem atribuir conclusão a recursos não demonstrados.
 - **Testes e verificações:** navegação pelas páginas disponíveis e revisão dos scripts e rotas existentes.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** páginas e estilos são estáticos; botões da HOME não iniciam nem cadastram estudos; envios de chat permanecem desabilitados; consultas são apenas informativas; não há API, persistência IndexedDB ou testes automatizados implementados.
 
 ### F0.3 — Definir uma linha de base
 
@@ -64,7 +67,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F0.1 e F0.2.
 - **Critérios de conclusão:** comandos de instalação, execução e validação documentados a partir do estado atual.
 - **Testes e verificações:** execução dos comandos existentes e registro dos resultados obtidos.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** Node.js v24.22.1; `npm.cmd run` lista somente `start`; `node --check` passou nos arquivos JavaScript existentes; `npm.cmd start` iniciou o servidor e `GET /`, `/estudo.html`, `/consultas.html` e `/css/style.css` responderam HTTP 200. Não há script de testes. No PowerShell deste ambiente, `npm` é bloqueado pela política de execução; `npm.cmd` funciona.
 
 ---
 
@@ -80,7 +84,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F0.1 e F0.2.
 - **Critérios de conclusão:** responsabilidades claras para HOME, estudo principal e consultas independentes, usando HTML, CSS e JavaScript puro.
 - **Testes e verificações:** revisão estrutural e confirmação de que não foram introduzidos frameworks.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `public/index.html`, `public/estudo.html` e `public/consultas.html` separam as áreas; `public/css/style.css` concentra os estilos; `public/js/app.js` está reservado como entrada JavaScript, mas permanece vazio. A inspeção confirmou HTML, CSS e JavaScript sem framework.
 
 ### F1.2 — Organizar o backend Express
 
@@ -88,7 +93,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F0.1 e F1.1.
 - **Critérios de conclusão:** fluxo de uma solicitação compreensível e separação básica entre entrada HTTP, regra de aplicação e integração externa.
 - **Testes e verificações:** inicialização do servidor e inspeção das rotas disponíveis.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `src/server.js` inicia o servidor; `src/app.js` compõe o Express; `src/routes/pages.js` concentra as rotas de arquivos estáticos. As pastas `controllers`, `validation` e `services` reservam as responsabilidades de entrada HTTP, validação e regras/integrações que serão preenchidas após os contratos da Fase 3. O teste automatizado `tests/app.test.js` confirma respostas HTTP das páginas e do CSS.
 
 ### F1.3 — Definir limites da memória local
 
@@ -96,7 +102,9 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F0.2 e F1.1.
 - **Critérios de conclusão:** limites documentados para aulas, etapas, tentativas, progresso, conceitos, históricos separados e consultas independentes.
 - **Testes e verificações:** revisão dos modelos contra os requisitos de separação de históricos e memória compartilhada.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Limites do modelo:** matérias agrupam estudos; cada estudo mantém assunto, etapas e estado atual; exercícios pertencem às etapas e tentativas preservam respostas/evidências sem inferir domínio automaticamente; progresso e memória estruturada são registros distintos. Histórico de mensagens tem coleções isoladas para Chat Principal, Tutor IA, consulta técnica, perguntas livres e, futuramente, personalização. Conceitos e evidências são estruturados e compartilháveis apenas entre Chat Principal e Tutor IA; consultas independentes não escrevem neles. A implementação e os nomes físicos dos object stores ficam para a Fase 4.
+- **Verificação:** modelo revisado contra os requisitos de progressão por evidências, separação dos históricos e não interferência das consultas.
 
 ---
 
@@ -112,7 +120,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F1.1 e F1.3.
 - **Critérios de conclusão:** páginas e ações da HOME correspondem ao fluxo aprovado e permitem identificar estudos iniciados e retomáveis.
 - **Testes e verificações:** teste manual de navegação, responsividade básica e estados de conteúdo.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** HOME permite criar múltiplas matérias, iniciar estudos e exibir ação para retomá-los pelo contexto da URL. O fluxo foi exercitado no navegador em tela móvel e desktop. A persistência após recarga e a retomada durável serão implementadas na Fase 4.
 
 ### F2.2 — Estruturar a tela de estudo principal
 
@@ -120,7 +129,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F1.1 e F1.3.
 - **Critérios de conclusão:** interfaces e mensagens distinguem claramente os dois chats e sua responsabilidade.
 - **Testes e verificações:** teste manual das áreas, estados vazios e separação visual dos históricos.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** página separa Chat Principal (área central) e Tutor IA (painel lateral), mantém históricos em regiões independentes e apresenta o assunto recebido pela navegação da HOME. A integração e o envio permanecem desativados até as fases de sistema de aprendizagem e IA.
 
 ### F2.3 — Implementar a interface das consultas independentes
 
@@ -128,7 +138,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F1.1 e F1.3.
 - **Critérios de conclusão:** consultas possuem histórico próprio e não exibem ações que alteram o estudo.
 - **Testes e verificações:** navegação manual e confirmação de que nenhuma consulta dispara atualização de etapa ou domínio.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** consulta técnica e perguntas livres têm entradas e regiões de histórico independentes; ambos os envios estão desabilitados até a integração com IA. Navegação por teclado, separação das regiões e layout móvel foram verificados no navegador.
 
 ### F2.4 — Refinar estados e acessibilidade básica
 
@@ -136,7 +147,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F2.1, F2.2 e F2.3.
 - **Critérios de conclusão:** estados principais possuem feedback claro e elementos interativos são utilizáveis.
 - **Testes e verificações:** testes manuais de teclado, foco, contraste básico e respostas a erros.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** HOME oferece estado vazio, erro de duplicidade e feedback de criação; diálogos recebem foco inicial; controles são navegáveis por teclado; chats indisponíveis exibem o estado em vez de simular sucesso. No navegador, HOME e estudo foram exercitados em largura móvel sem overflow horizontal. Cores de texto principais foram ajustadas para contraste superior a 4,5:1 contra branco.
 
 ---
 
@@ -152,7 +164,19 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F1.2 e F1.3.
 - **Critérios de conclusão:** contratos cobrem aulas, Chat Principal, Tutor IA e consultas independentes sem expor dados secretos.
 - **Testes e verificações:** revisão dos contratos e validação contra os fluxos do plano.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Contrato inicial:** dados de matérias, estudos, aulas, etapas, exercícios, tentativas, progresso, memória e históricos são mantidos localmente no IndexedDB; o backend não expõe CRUD desses dados no MVP. As rotas HTTP são solicitações stateless à IA:
+  - `POST /api/study/chat`: mensagem, histórico do Chat Principal e contexto da aula/memória.
+  - `POST /api/tutor/chat`: mensagem, histórico do Tutor IA e contexto permitido da aula/memória; sem operação que altere o estudo.
+  - `POST /api/consultations/technical`: mensagem, histórico técnico e assunto atual opcional.
+  - `POST /api/consultations/free`: mensagem, histórico de perguntas livres e assunto atual opcional.
+  - Em todas as rotas, `message` é texto obrigatório; `history`, quando enviado, é lista ordenada de `{ role: "user" | "assistant", content: string }`. Cada rota recebe somente o histórico do chat correspondente.
+  - Chat Principal e Tutor IA recebem `studyId` e `context` com matéria, etapa atual opcional e memória estruturada opcional. A memória contém conceitos com nome, estado (`not_started`, `learning`, `mastered`, `review`), dificuldades e evidências; estado `mastered` não será inferido do texto da conversa.
+  - Consultas independentes podem receber `subject` como contexto opcional e não recebem memória de aprendizagem nem contexto de progresso.
+  - `message` e cada mensagem do histórico têm limite de 4.000 caracteres; o histórico tem até 20 itens. `studyId` até 80 caracteres, matéria/etapa até 120, memória até 100 conceitos, com até 10 dificuldades/evidências por conceito e 500 caracteres por item.
+  - Sucesso: HTTP 200 `{ reply: string }`. Erro: `{ error: { code: string, message: string } }`, sem detalhes internos ou credenciais. Entrada inválida usa HTTP 400; integração indisponível será tratada como HTTP 503; falhas inesperadas como HTTP 500.
+  - Nenhuma rota grava progresso, tentativas, domínio ou histórico. Conteúdos e estado do estudante permanecem locais.
+- **Verificação:** contratos revisados contra as responsabilidades dos chats, isolamento de históricos, contexto opcional das consultas e invariantes do progresso.
 
 ### F3.2 — Implementar validação das solicitações
 
@@ -160,7 +184,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F3.1.
 - **Critérios de conclusão:** entradas inválidas retornam respostas consistentes e não são repassadas ao provedor.
 - **Testes e verificações:** testes automatizados de valores válidos, ausentes e malformados.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `src/validation/requests.js` valida limites e estruturas dos históricos, contexto de estudo, conceitos/evidências, assunto opcional das consultas e rejeita campos extras. Testes automatizados cobrem valores válidos, ausentes, vazios, malformados, limites excedidos e campos de progresso indevidos.
 
 ### F3.3 — Implementar rotas do Chat Principal
 
@@ -168,7 +193,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F3.1 e F3.2.
 - **Critérios de conclusão:** o Chat Principal recebe conteúdo, exemplos, exercícios e feedback por meio do backend sem alterar diretamente a lógica do navegador.
 - **Testes e verificações:** testes unitários ou de integração com provedor simulada.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `POST /api/study/chat` valida a entrada e encaminha a solicitação com papel `study` ao serviço injetável de IA. Teste com serviço simulado confirmou contrato `{ reply }`; serviço padrão retorna 503 até configuração do provedor.
 
 ### F3.4 — Implementar rotas do Tutor IA
 
@@ -176,7 +202,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F3.1, F3.2 e F3.3.
 - **Critérios de conclusão:** respostas consultam apenas o contexto permitido e não modificam etapa, exercícios, tentativas ou progresso.
 - **Testes e verificações:** testes que confirmem ausência de efeitos sobre progresso e responsabilidades.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `POST /api/tutor/chat` encaminha papel e contexto validados ao serviço, sem expor operações de progresso ou persistência. Testes confirmam papel isolado e rejeição de campo `progress`.
 
 ### F3.5 — Implementar rotas das consultas independentes
 
@@ -184,7 +211,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F3.1 e F3.2.
 - **Critérios de conclusão:** consultas aceitam assunto atual como contexto opcional e não alteram dados de aprendizagem.
 - **Testes e verificações:** testes negativos garantindo que etapa, domínio e progresso permanecem inalterados.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `POST /api/consultations/technical` e `POST /api/consultations/free` encaminham papéis e históricos próprios; aceitam assunto opcional e rejeitam memória de aprendizagem. Testes usam serviço simulado.
 
 ### F3.6 — Implementar tratamento de erros da API
 
@@ -192,7 +220,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F3.3, F3.4 e F3.5.
 - **Critérios de conclusão:** a interface recebe informações suficientes para mostrar erro sem vazar detalhes internos ou credenciais.
 - **Testes e verificações:** testes de indisponibilidade simulada e mensagens que não contenham segredo.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `src/middleware/apiErrorHandler.js` padroniza 400, 404, 413, 500 e 503. Testes cobrem JSON malformado, rota inexistente, indisponibilidade sem provedor e erro interno sem expor mensagem sensível na resposta ou no log.
 
 ---
 
@@ -208,7 +237,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F1.3 e F2.2.
 - **Critérios de conclusão:** modelos separados para Chat Principal, Tutor IA, consultas independentes, personalização futura e memória de aprendizagem.
 - **Testes e verificações:** revisão dos modelos e testes de criação, leitura e atualização isolada.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `public/js/storage/models.mjs` define matérias, estudos, etapas, exercícios, tentativas, progresso, conceitos, evidências e mensagens. `public/js/storage/database.mjs` define os object stores e índices; históricos do Chat Principal, Tutor IA, consulta técnica, perguntas livres e personalização futura usam stores distintos. Testes cobrem estados iniciais e rejeição de dados inválidos.
 
 ### F4.2 — Implementar acesso básico ao IndexedDB
 
@@ -216,7 +246,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.1.
 - **Critérios de conclusão:** os dados podem ser criados, recuperados e atualizados no navegador sem perder estados existentes.
 - **Testes e verificações:** testes de persistência em navegador ou ambiente compatível e reinício da aplicação.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `public/js/storage/database.mjs` abre e versiona o banco, oferece operações de leitura/escrita e transações atômicas em múltiplos stores. No navegador, criação, leitura, atualização, gravação transacional (incluindo rollback), retomada após recarga e migração de versão foram verificados.
 
 ### F4.3 — Registrar o progresso da aula
 
@@ -224,7 +255,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.1 e F4.2.
 - **Critérios de conclusão:** o usuário consegue retomar a aula no ponto registrado.
 - **Testes e verificações:** teste de avanço, pausa e retomada sem atribuir conclusão automática indevida.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** progresso é criado junto com o estudo na mesma transação e atualizado por `updateStudyProgress`, com etapa atual, etapas concluídas, último exercício e próxima atividade. O estudo carrega a etapa e o percentual após reabertura; testes confirmam persistência e rejeição de atualizações inválidas. Conclusão de etapa não é inferida pela criação ou por mensagem.
 
 ### F4.4 — Registrar os históricos separados
 
@@ -232,7 +264,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.1 e F4.2.
 - **Critérios de conclusão:** cada histórico é recuperado somente no contexto correspondente e não é usado como memória bruta compartilhada.
 - **Testes e verificações:** testes que enviem mensagens distintas e confirmem isolamento.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** stores e funções de leitura/gravação mantêm mensagens separadas para Chat Principal, Tutor IA e cada tipo de consulta. Testes confirmam isolamento mesmo com o mesmo identificador de conversa; consultas não aceitam `studyId`.
 
 ### F4.5 — Implementar memória compartilhada inicial
 
@@ -240,7 +273,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.1, F4.2 e F4.3.
 - **Critérios de conclusão:** Chat Principal e Tutor IA podem consultar e contribuir para o mesmo registro estruturado sem compartilhar conteúdo das conversas.
 - **Testes e verificações:** testes de escrita pelo Tutor IA e leitura pelo Chat Principal, sem atualização indevida de domínio.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** `public/js/storage/learningData.mjs` compartilha conceitos e sinais estruturados entre as origens `main` e `tutor`, separa evidências das conversas e não atualiza domínio automaticamente. Testes confirmam leitura compartilhada, dificuldades, sinais de compreensão e evidência prática com estado de domínio inalterado.
 
 ---
 
@@ -256,7 +290,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F2.1 e F4.2.
 - **Critérios de conclusão:** aulas podem ser criadas, listadas e retomadas com seus conteúdos.
 - **Testes e verificações:** testes de cadastro, leitura e atualização básica.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** na tela do estudo, é possível cadastrar etapas com conteúdo, listá-las, selecionar outra etapa para retomar e editar o título/conteúdo da etapa atual. A verificação manual no navegador confirmou persistência após recarga, ordenação e retomada sem atribuir conclusão automática; `npm.cmd test` e a checagem de sintaxe passaram.
 
 ### F5.2 — Implementar exercícios e tentativas
 
@@ -264,7 +299,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F4.3 e F5.1.
 - **Critérios de conclusão:** o estudante pode tentar mais de uma vez e o histórico mantém os resultados.
 - **Testes e verificações:** testes de nova tentativa, persistência e recuperação.
-- **Estado:** Não iniciada.
+- **Estado:** Concluída.
+- **Evidência:** a interface permite cadastrar exercícios por etapa e registrar múltiplas tentativas, recuperando respostas após recarga. Verificação manual confirmou duas tentativas persistidas, atualização de `lastExerciseId`, progresso de conclusão inalterado e conceito ainda `not_started`; `npm.cmd test` passou (19 testes).
 
 ### F5.3 — Implementar dicas progressivas e feedback
 
@@ -272,7 +308,8 @@ O desenvolvimento deve seguir estas regras:
 - **Dependências:** F5.2 e F3.3.
 - **Critérios de conclusão:** a IA orienta e não entrega diretamente a solução completa antes do momento autorizado pelo fluxo.
 - **Testes e verificações:** cenários automatizados ou manuais com respostas corretas, incorretas e solicitação de dica.
-- **Estado:** Não iniciada.
+- **Estado:** Bloqueada.
+- **Bloqueio:** o responsável confirmou custo máximo atual de US$ 0 e deixou o público-alvo indefinido. A faixa gratuita do Gemini não é adequada se menores de 18 anos puderem usar o produto e permite uso/revisão dos dados para melhoria; as APIs comparadas não têm uma opção gratuita garantida e apropriada já aprovada. A integração depende de definir público e orçamento ou aprovar uma alternativa sem IA.
 
 ### F5.4 — Avaliar domínio por evidências
 
@@ -510,13 +547,13 @@ O desenvolvimento deve seguir estas regras:
 
 | Fase | Estado geral | Observação |
 |---|---|---|
-| Fase 0 — Diagnóstico do projeto | Não iniciada | levantamento inicial ainda não registrado neste plano. |
-| Fase 1 — Arquitetura e organização | Não iniciada | nenhuma estrutura adicional foi aprovada além das tecnologias existentes no `plano.md`. |
-| Fase 2 — Interface e experiência do usuário | Não iniciada | telas existentes devem ser verificadas antes de alterações. |
-| Fase 3 — Backend e API | Não iniciada | backend atual é básico e não prova implementação de todas as rotas. |
-| Fase 4 — Persistência e organização dos dados | Não iniciada | IndexedDB é a memória local aprovada. |
-| Fase 5 — Sistema de aprendizagem | Não iniciada | inclui aula, exercícios e evidências sem inventar critérios não aprovados. |
-| Fase 6 — Inteligência artificial | Não iniciada | provedor ainda não escolhido. |
+| Fase 0 — Diagnóstico do projeto | Concluída | estrutura, comportamento existente e baseline de execução registrados com evidências. |
+| Fase 1 — Arquitetura e organização | Concluída | interface e responsabilidades básicas do Express revisadas; limites da memória local documentados. |
+| Fase 2 — Interface e experiência do usuário | Concluída | fluxos visuais da HOME, estudo e consultas revisados; persistência durável permanece na Fase 4. |
+| Fase 3 — Backend e API | Concluída | contratos, validação, quatro rotas stateless e tratamento seguro de erros cobertos por testes com serviço de IA simulado. O provedor real permanece pendente da Fase 6. |
+| Fase 4 — Persistência e organização dos dados | Concluída | IndexedDB versionado, retomada, progresso, históricos isolados e memória estruturada implementados e verificados. |
+| Fase 5 — Sistema de aprendizagem | Bloqueada | F5.1 e F5.2 concluídas; F5.3 aguarda uma opção de IA compatível com custo e público-alvo aprovados. |
+| Fase 6 — Inteligência artificial | Aguardando aprovação | comparação apresentada; orçamento atual é US$ 0 e o público-alvo ainda não foi definido. |
 | Fase 7 — Consultas independentes | Não iniciada | não altera estado do estudo. |
 | Fase 8 — Personalização com IA | Não iniciada | fora do MVP. |
 | Fase 9 — Testes, segurança e qualidade | Não iniciada | testes precisam ser definidos e executados. |

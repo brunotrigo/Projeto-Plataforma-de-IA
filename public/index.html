@@ -32,6 +32,7 @@
     </header>
 
     <main>
+      <p class="storage-feedback page-shell" id="storage-feedback" role="alert" hidden></p>
       <section class="welcome-section page-shell" id="inicio" aria-labelledby="welcome-title">
         <div class="welcome-copy">
           <p class="eyebrow"><span class="eyebrow-line"></span> APRENDER, UM PASSO DE CADA VEZ</p>
@@ -47,7 +48,7 @@
           </a>
         </div>
 
-        <aside class="study-card" id="novo-estudo" aria-labelledby="study-title">
+        <form class="study-card" id="study-form" aria-labelledby="study-title">
           <div class="study-card-heading">
             <span class="study-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
@@ -57,10 +58,15 @@
             <span class="card-kicker">UM NOVO COMEÇO</span>
           </div>
           <h2 id="study-title">O que você quer aprender?</h2>
-          <p>Escolha um assunto para começar a estudar.</p>
+          <p>Escolha uma matéria ou crie uma nova para organizar seus estudos.</p>
+          <label for="study-subject">Matéria</label>
+          <select id="study-subject" name="study-subject" required disabled>
+            <option value="">Adicione uma matéria primeiro</option>
+          </select>
           <label class="visually-hidden" for="study-topic">Assunto que deseja estudar</label>
-          <input id="study-topic" name="study-topic" type="text" placeholder="Ex.: fundamentos de JavaScript">
-          <button class="primary-button" type="button">
+          <input id="study-topic" name="study-topic" type="text" placeholder="Ex.: fundamentos de JavaScript" required>
+          <p class="form-feedback" id="study-feedback" role="status" aria-live="polite"></p>
+          <button class="primary-button" id="start-study-button" type="submit" disabled>
             Começar um estudo
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <path d="M4 10h12m-5-5 5 5-5 5" />
@@ -70,7 +76,7 @@
             <span class="sparkle" aria-hidden="true">✦</span>
             <span>Aprenda no seu próprio ritmo</span>
           </div>
-        </aside>
+        </form>
       </section>
 
       <section class="subjects-section page-shell" id="materias" aria-labelledby="subjects-title">
@@ -79,27 +85,26 @@
             <p class="eyebrow">SEU ESPAÇO DE APRENDIZADO</p>
             <h2 id="subjects-title">Minhas matérias</h2>
           </div>
-          <span class="subject-count">0 matérias</span>
+          <div class="subject-heading-actions">
+            <span class="subject-count" id="subject-count">0 matérias</span>
+            <button class="secondary-button" id="add-subject-button" type="button">Adicionar matéria</button>
+          </div>
         </div>
 
         <div class="subjects-grid">
-          <article class="add-subject-card">
+          <div class="subject-list" id="subject-list" aria-live="polite">
+            <article class="add-subject-card" id="empty-subject-state">
             <span class="add-subject-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 5v14M5 12h14" />
               </svg>
             </span>
             <h3>Adicione sua primeira matéria</h3>
-            <p>Crie um espaço para reunir os assuntos que você quer aprender.</p>
-            <button class="secondary-button" type="button">
-              Adicionar matéria
-              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <path d="M10 4v12m-6-6h12" />
-              </svg>
-            </button>
+            <p>Crie um espaço para reunir os assuntos que você quer aprender usando o botão acima.</p>
           </article>
+        </div>
 
-          <aside class="learning-note" aria-label="Dica de estudo">
+        <aside class="learning-note" aria-label="Dica de estudo">
             <span class="note-decoration" aria-hidden="true">✳</span>
             <div class="note-content">
               <span class="card-kicker">DICA PARA COMEÇAR</span>
@@ -108,14 +113,28 @@
             </div>
             <span class="note-orbit note-orbit-one" aria-hidden="true"></span>
             <span class="note-orbit note-orbit-two" aria-hidden="true"></span>
-          </aside>
-        </div>
+        </aside>
       </section>
     </main>
+
+    <dialog class="subject-dialog" id="subject-dialog" aria-labelledby="subject-dialog-title">
+      <form id="subject-form" method="dialog">
+        <p class="eyebrow">ORGANIZE SEUS ESTUDOS</p>
+        <h2 id="subject-dialog-title">Nova matéria</h2>
+        <label for="subject-name">Nome da matéria</label>
+        <input id="subject-name" name="subject-name" type="text" maxlength="80" required>
+        <p class="form-feedback" id="subject-feedback" role="status" aria-live="polite"></p>
+        <div class="dialog-actions">
+          <button class="secondary-button" id="cancel-subject-button" type="button">Cancelar</button>
+          <button class="primary-button" type="submit">Adicionar matéria</button>
+        </div>
+      </form>
+    </dialog>
 
     <footer class="site-footer page-shell">
       <span class="footer-brand">Plataforma de Estudos <span>com IA</span></span>
       <span>Feita para acompanhar sua jornada de aprendizado.</span>
     </footer>
+    <script type="module" src="/js/app.js"></script>
   </body>
 </html>
