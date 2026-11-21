@@ -20,7 +20,8 @@ O desenvolvimento deve seguir estas regras:
 - Backend: Node.js com Express.
 - Memória local: IndexedDB no navegador.
 - A chave do provedor de IA permanece protegida no backend.
-- O provedor de IA ainda não foi escolhido.
+- Nenhum provedor de IA está aprovado para integração. A preferência declarada pelo desenvolvedor é a Gemini API, ainda pendente de validação dos termos e aprovação técnica.
+- GitHub Copilot será utilizado exclusivamente como assistente de desenvolvimento no VS Code, não como provedor da plataforma.
 - Histórico do Chat Principal separado do histórico do Tutor IA.
 - Memória de aprendizagem compartilhada entre Chat Principal e Tutor IA.
 - O Tutor IA não altera diretamente etapas, exercícios, tentativas, conclusão de atividades ou progresso.
@@ -339,11 +340,12 @@ O desenvolvimento deve seguir estas regras:
 
 ### F6.1 — Escolher o provedor somente após aprovação
 
-- **Descrição:** avaliar candidatos e apresentar comparação técnica e de custos antes de configurar um provedor.
+- **Descrição:** registrar a preferência atual e validar termos, privacidade, custos, limites e compatibilidade técnica antes de aprovar um provedor.
 - **Dependências:** F3.1.
-- **Critérios de conclusão:** responsável aprova explicitamente o provedor; nenhuma chave é incorporada ao frontend.
-- **Testes e verificações:** revisão da proposta e configuração de ambiente em ambiente de desenvolvimento.
-- **Estado:** Não iniciada.
+- **Critérios de conclusão:** compatibilidade dos termos com o uso pretendido, privacidade e orçamento avaliados; responsável aprova explicitamente o provedor; nenhuma chave é incorporada ao frontend.
+- **Testes e verificações:** revisão de fontes oficiais, análise de compatibilidade e aprovação explícita. Não exige criar conta, configurar chave ou faturamento, fazer chamada à API ou implementar integração.
+- **Estado:** Aguardando aprovação.
+- **Evidência e bloqueio:** Gemini API registrada como preferência do desenvolvedor, não como provedor aprovado. Os termos oficiais atuais exigem que o desenvolvedor tenha 18 anos, proíbem API Clients direcionados a ou provavelmente acessados por menores de 18 anos e descrevem o uso dos serviços como profissional ou empresarial, não de consumo. Isso aparenta conflito com o uso pessoal previsto em `plano.md`; a possibilidade futura de comercialização, ainda não decidida, não valida o uso pessoal atual. No tier gratuito, prompts e respostas podem ser usados para melhoria e revisão humana. No tier pago, não são usados para melhoria, mas permanecem sujeitos a processamento para segurança e a configurações de logs. A compatibilidade dos termos e a aprovação técnica continuam pendentes. Nenhuma conta, chave ou faturamento foi configurado e nenhuma chamada ou integração foi realizada. Fontes: [termos Gemini API](https://ai.google.dev/gemini-api/docs/terms), [preços](https://ai.google.dev/gemini-api/docs/pricing), [limites](https://ai.google.dev/gemini-api/docs/rate-limits), [faturamento](https://ai.google.dev/gemini-api/docs/billing), [política de logs](https://ai.google.dev/gemini-api/docs/logs-policy) e [monitoramento de uso](https://ai.google.dev/gemini-api/docs/usage-policies).
 
 ### F6.2 — Criar serviço de IA no backend
 
@@ -555,7 +557,7 @@ O desenvolvimento deve seguir estas regras:
 | Fase 3 — Backend e API | Concluída | contratos, validação, quatro rotas stateless e tratamento seguro de erros cobertos por testes com serviço de IA simulado. O provedor real permanece pendente da Fase 6. |
 | Fase 4 — Persistência e organização dos dados | Concluída | IndexedDB versionado, retomada, progresso, históricos isolados e memória estruturada implementados e verificados. |
 | Fase 5 — Sistema de aprendizagem | Bloqueada | F5.1, F5.2, F5.4 e F5.5 concluídas; F5.3 permanece bloqueada até decisão sobre uma opção de IA compatível com custo e público-alvo aprovados. |
-| Fase 6 — Inteligência artificial | Aguardando aprovação | comparação apresentada; orçamento atual é US$ 0 e o público-alvo ainda não foi definido. |
+| Fase 6 — Inteligência artificial | Aguardando aprovação | Gemini API é a preferência declarada pelo desenvolvedor, mas ainda não está aprovada. A compatibilidade dos termos com o uso pessoal e a aprovação técnica permanecem pendentes; F6.1 não está concluída e F6.2 não foi iniciada. |
 | Fase 7 — Consultas independentes | Não iniciada | não altera estado do estudo. |
 | Fase 8 — Personalização com IA | Não iniciada | fora do MVP. |
 | Fase 9 — Testes, segurança e qualidade | Não iniciada | testes precisam ser definidos e executados. |
